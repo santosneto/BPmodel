@@ -4,11 +4,12 @@
 \alias{diag.RBS}
 \alias{diag.BP}
 \alias{residuals.pearson}
+\alias{res_pearson}
 \title{Diagnostic Analysis - Local Influnce}
 \usage{
 diag.BP(model, mu.link = "log", sigma.link = "log", scheme = "case.weight")
 
-\method{residuals}{pearson}(model)
+res_pearson(model)
 }
 \arguments{
 \item{model}{Object of class \code{gamlss} holding the fitted model.}

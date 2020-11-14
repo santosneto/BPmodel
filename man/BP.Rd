@@ -32,6 +32,8 @@ qBP(p, mu = 1, sigma = 1, lower.tail = TRUE, log.p = FALSE)
 
 \item{sigma}{vector of shape parameter values}
 
+\item{log, }{logical; if TRUE, quantiles are given as log.}
+
 \item{lower.tail}{logical; if TRUE (default), probabilities are P[X <= x], otherwise, P[X > x]}
 
 \item{log.p, }{log.p logical; if TRUE, probabilities p are given as log(p).}
@@ -39,22 +41,6 @@ qBP(p, mu = 1, sigma = 1, lower.tail = TRUE, log.p = FALSE)
 \item{n}{number of observations. If \code{length(n) > 1}, the length is taken to be the number required.}
 
 \item{p}{vector of probabilities.}
-
-\item{log.d, }{log.p logical; if TRUE, density d are given as log(d).}
-
-\item{log.q, }{log.p logical; if TRUE, quantiles q are given as log(q).}
-
-\item{log.h, }{log.p logical; if TRUE, hazard h are given as log(h).}
-
-\item{from}{where to start plotting the distribution from.}
-
-\item{to}{up to where to plot the distribution.}
-
-\item{obj}{a fitted RWL object.}
-
-\item{...}{other graphical parameters for plotting.}
-
-\item{title}{title of the plot.}
 }
 \value{
 returns a \code{gamlss.family} object which can be used to fit a reparameterized weighted Lindley distribution in the \code{gamlss()} function.

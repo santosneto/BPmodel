@@ -48,7 +48,6 @@ envelope.RBS(
 envelope.WEI3(
   model,
   k = 100,
-  link = c("log", "identity"),
   color = "grey50",
   xlabel = "Theorical Quantile",
   ylabel = "Empirical Quantile",
@@ -67,13 +66,6 @@ envelope.WEI3(
 \item{ylabel}{a label for the y axis.}
 
 \item{font}{the font used in x and y axis.}
-
-\item{res}{type of residuals to be extracted. Default is deviance.}
-
-\item{precision}{If \code{precision = "fixed"} a model with precision fixed is used;
-else a model with precision variable is used.}
-
-\item{dist}{The function RBS() defines the RBS distribution.}
 }
 \value{
 A simulated envelope of the class RBS, ZARBS and ZAGA.

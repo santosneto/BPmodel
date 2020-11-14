@@ -25,18 +25,11 @@
 #' @param x,q vector of quantiles
 #' @param mu vector of scale parameter values
 #' @param sigma vector of shape parameter values
-#' @param log.d, log.p logical; if TRUE, density d are given as log(d).
 #' @param log.p, log.p logical; if TRUE, probabilities p are given as log(p).
-#' @param log.q, log.p logical; if TRUE, quantiles q are given as log(q).
-#' @param log.h, log.p logical; if TRUE, hazard h are given as log(h).
+#' @param log, logical; if TRUE, quantiles are given as log.
 #' @param lower.tail logical; if TRUE (default), probabilities are P[X <= x], otherwise, P[X > x]
 #' @param p vector of probabilities.
 #' @param n number of observations. If \code{length(n) > 1}, the length is taken to be the number required.
-#' @param from where to start plotting the distribution from.
-#' @param to up to where to plot the distribution.
-#' @param obj a fitted RWL object.
-#' @param ... other graphical parameters for plotting.
-#' @param title title of the plot.
 #'
 #'
 #'@return returns a \code{gamlss.family} object which can be used to fit a reparameterized weighted Lindley distribution in the \code{gamlss()} function.
@@ -427,7 +420,7 @@ diag.BP <- function(model,mu.link = "log",sigma.link = "log",scheme="case.weight
 #'@rdname diag.RBS
 #'
 #'@export
-residuals.pearson <- function(model)
+res_pearson <- function(model)
 {
 
   mu <- fit$mu.fv
@@ -455,10 +448,6 @@ residuals.pearson <- function(model)
 #'
 #' @param model object of class \code{gamlss} holding the fitted model.
 #' @param k number of replications for envelope construction. Default is 19.
-#' @param res type of residuals to be extracted. Default is deviance.
-#' @param precision If \code{precision = "fixed"} a model with precision fixed is used;
-#' else a model with precision variable is used.
-#' @param dist The function RBS() defines the RBS distribution.
 #' @param xlabel a label for the x axis.
 #' @param color the color of the envelope.
 #' @param ylabel a label for the y axis.
@@ -479,51 +468,55 @@ residuals.pearson <- function(model)
 #'regression models with varying precision. \emph{Electronic Journal of Statistics}, 10, 2825--2855. doi: \email{10.1214/16-EJS1187}.
 #'
 #'@importFrom graphics par points polygon
-#'@importFrom stats qqnorm
+#'@importFrom stats qqnorm rnorm
 #'@importFrom gamlss gamlss gamlss.control
 #'@import ggplot2
+#'@import dplyr
 #'@export
 
 envelope.BP <- function(model,k=100,color = "grey50", xlabel = "Theorical Quantile",ylabel = "Empirical Quantile",font="serif")
 {
 
-  n=model$N
-  td  = model$residuals
-  re <- matrix(0,n,k)
+  n <- model$N
+  td  <-  model$residuals
+  re <- base::matrix(0,n,k)
 
   for(i in 1:k)
   {
     y1 <-rnorm(n)
-    re[,i] <- sort(y1)
+    re[,i] <- base::sort(y1)
   }
-  e10 <- numeric(n)
-  e20 <- numeric(n)
-  e11 <- numeric(n)
-  e21 <- numeric(n)
-  e12 <- numeric(n)
-  e22 <- numeric(n)
+  e10 <- base::numeric(n)
+  e20 <- base::numeric(n)
+  e11 <- base::numeric(n)
+  e21 <- base::numeric(n)
+  e12 <- base::numeric(n)
+  e22 <- base::numeric(n)
 
   for(l in 1:n)
   {
-    eo = sort(re[l,])
-    e10[l] = eo[ceiling(k*0.01)]
-    e20[l] = eo[ceiling(k*(1 - 0.01))]
-    e11[l] = eo[ceiling(k*0.05)]
-    e21[l] = eo[ceiling(k*(1 - 0.05))]
-    e12[l] = eo[ceiling(k*0.1)]
-    e22[l] = eo[ceiling(k*(1 - 0.1))]
+    eo <-  sort(re[l,])
+    e10[l] <- eo[base::ceiling(k*0.01)]
+    e20[l] <- eo[base::ceiling(k*(1 - 0.01))]
+    e11[l] <- eo[base::ceiling(k*0.05)]
+    e21[l] <- eo[base::ceiling(k*(1 - 0.05))]
+    e12[l] <- eo[base::ceiling(k*0.1)]
+    e22[l] <- eo[base::ceiling(k*(1 - 0.1))]
   }
 
   a <- qqnorm(e10, plot.it = FALSE)$x
   r <- qqnorm(td, plot.it = FALSE)$x
-  xb = apply(re, 1, mean)
+  xb <- base::apply(re, 1, mean)
   rxb <- qqnorm(xb, plot.it = FALSE)$x
 
-  df <- data.frame(r=r,xab=a,emin=cbind(e10,e11,e12),emax=cbind(e20,e21,e22),xb=xb,td=td,rxb=rxb)
-  ggplot(df,aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) + theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank())+theme(text=element_text(size=30,family=font))
+  df <- base::data.frame(r=r,xab=a,emin=base::cbind(e10,e11,e12),emax=base::cbind(e20,e21,e22),xb=xb,td=td,rxb=rxb)
+  df %>% ggplot(aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) + theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank())+theme(text=element_text(size=30,family=font))
 }
 
 #'@rdname envelope
+#'
+#'@importFrom ggplot2 ggplot
+#'@importFrom stats rnorm
 #'
 #'@export
 envelope.GA <- function(model,k=100,color = "grey50", xlabel = "Theorical Quantile",ylabel = "Empirical Quantile",font="serif")
@@ -566,7 +559,8 @@ envelope.GA <- function(model,k=100,color = "grey50", xlabel = "Theorical Quanti
 }
 
 #'@rdname envelope
-#'
+#'@importFrom ggplot2 ggplot
+#'@importFrom stats rnorm
 #'@export
 envelope.IG <- function(model,k=100,color = "grey50", xlabel = "Theorical Quantile",ylabel = "Empirical Quantile",font="serif")
 {
@@ -608,7 +602,8 @@ envelope.IG <- function(model,k=100,color = "grey50", xlabel = "Theorical Quanti
 }
 
 #'@rdname envelope
-#'
+#'@importFrom ggplot2 ggplot
+#'@importFrom stats rnorm
 #'@export
 envelope.RBS <- function(model,k=100,color = "grey50", xlabel = "Theorical Quantile",ylabel = "Empirical Quantile",font="serif")
 {
@@ -649,9 +644,10 @@ envelope.RBS <- function(model,k=100,color = "grey50", xlabel = "Theorical Quant
 }
 
 #'@rdname envelope
-#'
+#'@importFrom ggplot2 ggplot
+#'@importFrom stats rnorm
 #'@export
-envelope.WEI3 <- function(model,k=100,link=c("log","identity"),color = "grey50", xlabel = "Theorical Quantile",ylabel = "Empirical Quantile",font="serif")
+envelope.WEI3 <- function(model,k=100,color = "grey50", xlabel = "Theorical Quantile",ylabel = "Empirical Quantile",font="serif")
 {
 
   n=model$N
