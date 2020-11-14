@@ -113,7 +113,7 @@ BP <- function (mu.link = "log", sigma.link = "log")
                  G.dev.incr = function(y, mu, sigma,...){-2*dBP(y, mu, sigma, log = TRUE)},
                  rqres = expression(rqres(pfun = "pBP", type = "Continuous", y = y, mu = mu, sigma = sigma)),
                  mu.initial = expression({mu <- y + mean(y)/2 }),
-                 sigma.initial = expression({sigma <-  mean(y)*(1+mean(y))/var(y) }),
+                 sigma.initial = expression({sigma <- rep(1,length(y)) }),
                  mu.valid = function(mu) all(mu > 0),
                  sigma.valid = function(sigma) all(sigma > 0),
                  y.valid = function(y) all(y > 0)),
