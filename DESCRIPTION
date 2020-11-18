@@ -3,7 +3,7 @@ Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
 Date: 2020-11-14
-Author: Manoel Santos-Neto [aut, cre] 
+Author: Manoel Santos-Neto [aut, cre], 
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
