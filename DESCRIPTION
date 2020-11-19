@@ -1,12 +1,11 @@
 Package: BPmodel
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Beta-Prime Regression Model
 Version: 0.1.0
 Date: 2020-11-14
-Author: Manoel Santos-Neto [aut, cre], 
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Manoel Santos-Neto [aut, cre], Tales Ribeiro-Bezerra  [cre]
+Maintainer: Tales R. Bezerra <tales.bezerra@ccc.ufcg.edu.br>
+Description: Beta-Prime regression for modeling beta-prime-distributed dependent variables. 
 Depends: R (>= 3.1.2), stats, graphics, pracma, dplyr
 Imports: gamlss, base, ggplot2, extraDistr, gamlss.dist
 License: GPL-3
