@@ -11,12 +11,12 @@
 #'
 #'@title Reparameterized Beta Prime (BP) distribution for fitting a GAMLSS
 #'
-#'@description The fuction \code{BP()} defines the BP distribution, a two paramenter
+#'@description The function \code{BP()} defines the BP distribution, a two parameter
 #'distribution, for a gamlss.family object to be used in GAMLSS fitting using using the
 #'function \code{gamlss()}, with mean equal to the parameter \code{mu} and \code{sigma}
-#'equal the precision parameter. The functions \code{dBP}, \code{pBP}, \code{qBP},
-#'\code{rBP} and \code{hBP} define the density, distribution function, quantile function, random
-#'genetation and hazard function for the \code{BP} parameterization of the RWL distribution.
+#'equal the precision parameter. The functions \code{dBP}, \code{pBP}, \code{qBP} and
+#'\code{rBP} define the density, distribution function, quantile function and random
+#'generation for the \code{BP} parameterization of the BP distribution.
 #'
 #'@usage BP(mu.link = "log", sigma.link = "log")
 #'
@@ -32,12 +32,17 @@
 #' @param n number of observations. If \code{length(n) > 1}, the length is taken to be the number required.
 #'
 #'
-#'@return returns a \code{gamlss.family} object which can be used to fit a reparameterized weighted Lindley distribution in the \code{gamlss()} function.
+#'@return returns a \code{gamlss.family} object which can be used to fit a BP distribution in the \code{gamlss()} function.
 #'
-#'@note For the function RWL(), mu is the mean and sigma is the precision parameter of the reparameterized weighted Lindley distribution.
+#'@note For the function BP(), mu is the mean and sigma is the precision parameter of the BP distribution.
 #'
 #'@author
-#'Manoel Santos-Neto \email{santosnetoce at protemail.com}
+#'Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}.
+#'
+#'@reference
+#'
+#'Bourguignon, M., Santos-Neto, M. and Castro, M. (2018). A new regression model for positive data. arXiv.
+#'
 #'
 #'@importFrom gamlss.dist checklink
 #'
