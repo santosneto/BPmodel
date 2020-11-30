@@ -11,12 +11,12 @@
 #'
 #'@title Reparameterized Beta Prime (BP) distribution for fitting a GAMLSS
 #'
-#'@description The fuction \code{BP()} defines the BP distribution, a two paramenter
+#'@description The function \code{BP()} defines the BP distribution, a two parameter
 #'distribution, for a gamlss.family object to be used in GAMLSS fitting using using the
 #'function \code{gamlss()}, with mean equal to the parameter \code{mu} and \code{sigma}
-#'equal the precision parameter. The functions \code{dBP}, \code{pBP}, \code{qBP},
-#'\code{rBP} and \code{hBP} define the density, distribution function, quantile function, random
-#'genetation and hazard function for the \code{BP} parameterization of the RWL distribution.
+#'equal the precision parameter. The functions \code{dBP}, \code{pBP}, \code{qBP} and
+#'\code{rBP} define the density, distribution function, quantile function and random
+#'generation for the \code{BP} parameterization of the BP distribution.
 #'
 #'@usage BP(mu.link = "log", sigma.link = "log")
 #'
@@ -32,12 +32,17 @@
 #' @param n number of observations. If \code{length(n) > 1}, the length is taken to be the number required.
 #'
 #'
-#'@return returns a \code{gamlss.family} object which can be used to fit a reparameterized weighted Lindley distribution in the \code{gamlss()} function.
+#'@return returns a \code{gamlss.family} object which can be used to fit a BP distribution in the \code{gamlss()} function.
 #'
-#'@note For the function RWL(), mu is the mean and sigma is the precision parameter of the reparameterized weighted Lindley distribution.
+#'@note For the function BP(), mu is the mean and sigma is the precision parameter of the BP distribution.
 #'
 #'@author
-#'Manoel Santos-Neto \email{santosnetoce at protemail.com}
+#'Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}.
+#'
+#'@reference
+#'
+#'Bourguignon, M., Santos-Neto, M. and Castro, M. (2018). A new regression model for positive data. arXiv.
+#'
 #'
 #'@importFrom gamlss.dist checklink
 #'
@@ -217,18 +222,18 @@ qBP <- function(p, mu = 1, sigma = 1, lower.tail = TRUE, log.p = FALSE)
 #'@description Diagnostics for the BP model
 #'
 #'@param model Object of class \code{gamlss} holding the fitted model.
-#'@param scheme Default is "case.weight". But, can be "response", "location" or "precision".
+#'@param scheme Default is "case.weight". But, can be "response".
 #'@param mu.link  Defines the mu.link, with "identity" link as the default for the mu parameter.
-#'@param sigma.link Defines the sigma.link, with "identity" link as the default for the sigma parameter
+#'@param sigma.link Defines the sigma.link, with "identity" link as the default for the sigma parameter.
 
 #'
 #'@return Local influence measures.
 #'
 #' @author
-#'Manoel Santos-Neto \email{manoel.ferreira@ufcg.edu.br}, F.J.A. Cysneiros \email{cysneiros@de.ufpe.br}, Victor Leiva \email{victorleivasanchez@gmail.com} and Michelli Barros \email{michelli.karinne@gmail.com}
+#'Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}
 #'
 #'@references
-#'Leiva, V., Santos-Neto, M., Cysneiros, F.J.A, Barros, M. (2014)  Birnbaum-Saunders statistical modelling: a new approach. \emph{Statistical Modelling}, v. 14, p. 21-48, 2014.
+#'Bourguignon, M., Santos-Neto, M. and Castro, M. (2018). A new regression model for positive data. arXiv.
 #'
 #'@importFrom pracma hessian ones
 #'@importFrom stats make.link sd
@@ -444,25 +449,25 @@ res_pearson <- function(model)
 #'
 #'@title Envelopes
 #'
-#'@description A normal plot with simulated envelope of the residual is produced.
+#'@description Computes simulation envelopes.
 #'
-#' @param model object of class \code{gamlss} holding the fitted model.
+#' @param model object of class \code{gamlss}.
 #' @param k number of replications for envelope construction. Default is 19.
 #' @param xlabel a label for the x axis.
-#' @param color the color of the envelope.
 #' @param ylabel a label for the y axis.
-#' @param font the font used in x and y axis.
+#' @param color a specification for the default envelope color.
+#' @param font the name of a font family for x and y axis.
 #'
 #'
-#'@return A simulated envelope of the class RBS, ZARBS and ZAGA.
+#'@return A simulated envelope of the class BP, GA, IG, RBS and WEI3.
 #'
-#' @author
-#'Manoel Santos-Neto \email{manoel.ferreira@ufcg.edu.br}, F.J.A. Cysneiros \email{cysneiros@de.ufpe.br}, Victor Leiva \email{victorleivasanchez@gmail.com} and Michelli Barros \email{michelli.karinne@gmail.com}
+#'@author
+#'Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}
 #'
 #'@references
 #'Atkinson, A. C. (1985) Plots, transformations and regression : an introduction to graphical methods of diagnostic regression analysis. Oxford Science Publications, Oxford.
-#'
-#'Leiva, V., Santos-Neto, M., Cysneiros, F.J.A, Barros, M. (2014)  Birnbaum-Saunders statistical modelling: a new approach. \emph{Statistical Modelling}, v. 14, p. 21-48, 2014.
+#'Bourguignon, M., Santos-Neto, M. and Castro, M. (2018). A new regression model for positive data. arXiv.
+#'Leiva, V., Santos-Neto, M., Cysneiros, F.J.A, Barros, M. (2014)  Birnbaum-Saunders statistical modeling: a new approach. \emph{Statistical Modelling}, v. 14, p. 21-48, 2014.
 #'
 #'Santos-Neto, M., Cysneiros, F.J.A., Leiva, V., Barros, M. (2016) Reparameterized Birnbaum-Saunders
 #'regression models with varying precision. \emph{Electronic Journal of Statistics}, 10, 2825--2855. doi: \email{10.1214/16-EJS1187}.
