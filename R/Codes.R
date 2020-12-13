@@ -39,7 +39,7 @@
 #'@author
 #'Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}.
 #'
-#'@reference
+#'@references
 #'
 #'Bourguignon, M., Santos-Neto, M. and Castro, M. (2018). A new regression model for positive data. arXiv.
 #'
@@ -212,12 +212,15 @@ qBP <- function(p, mu = 1, sigma = 1, lower.tail = TRUE, log.p = FALSE)
 }
 
 
-#'@name diag.RBS
+#'@name diag.BP
 #'
-#'@aliases diag.RBS
+#'@aliases diag.BP
+#'@aliases diag.GA
+#'@aliases diag.IG
+#'@aliases diag.WEI
 #'@aliases residuals.pearson
 #'
-#'@title Diagnostic Analysis - Local Influnce
+#'@title Diagnostic Analysis - Local Influence
 #'
 #'@description Diagnostics for the BP model
 #'
@@ -261,20 +264,20 @@ diag.BP <- function(model,mu.link = "log",sigma.link = "log",scheme="case.weight
   sigma_mu.eta  <- sigma_linkobj$mu.eta
 
 
-  B=function(Delta,I,M)
+  B <- function(Delta,I,M)
   {
-    B=(t(Delta)%*%(I-M)%*%Delta)
+    B <- (t(Delta)%*%(I-M)%*%Delta)
     return(B)
   }
 
   loglik <- function(vP)
   {
-    betab = vP[1:p]
-    alpha = vP[-(1:p)]
-    eta   = as.vector(x%*%betab)
-    tau   = as.vector(z%*%alpha)
-    mu    = linkinv(eta)
-    sigma = sigma_linkinv(tau)
+    betab <- vP[1:p]
+    alpha <- vP[-(1:p)]
+    eta   <- as.vector(x%*%betab)
+    tau   <- as.vector(z%*%alpha)
+    mu    <- linkinv(eta)
+    sigma <- sigma_linkinv(tau)
 
     a <- mu*(1+sigma)
     b <- 2 + sigma
@@ -289,18 +292,18 @@ diag.BP <- function(model,mu.link = "log",sigma.link = "log",scheme="case.weight
   x0<- c(muest,sigmaest)
   h0 <- hessian(loglik,x0)
 
-  Ldelta= h0[(p+1):(p+q),(p+1):(p+q)]
-  Lbeta=h0[1:p,1:p]
-  b11=cbind(matrix(0, p, p), matrix(0, p, q))
-  b12=cbind(matrix(0, q, p), solve(Ldelta))
-  B1= rbind(b11, b12)  #parameter beta
-  b211 =cbind(solve(Lbeta), matrix(0, p, q))
-  b212= cbind(matrix(0, q, p), matrix(0, q, q))
-  B2=rbind(b211,b212)  # parameter delta
+  Ldelta <- h0[(p+1):(p+q),(p+1):(p+q)]
+  Lbeta <- h0[1:p,1:p]
+  b11 <- cbind(matrix(0, p, p), matrix(0, p, q))
+  b12 <- cbind(matrix(0, q, p), solve(Ldelta))
+  B1 <- rbind(b11, b12)  #parameter beta
+  b211 <- cbind(solve(Lbeta), matrix(0, p, q))
+  b212 <- cbind(matrix(0, q, p), matrix(0, q, q))
+  B2 <- rbind(b211,b212)  # parameter delta
 
-  b311 =cbind(matrix(0, p, p), matrix(0, p, q))
-  b312= cbind(matrix(0, q, p), matrix(0, q, q))
-  B3=rbind(b311,b312)  # parameter theta
+  b311 <- cbind(matrix(0, p, p), matrix(0, p, q))
+  b312 <- cbind(matrix(0, q, p), matrix(0, q, q))
+  B3 <- rbind(b311,b312)  # parameter theta
 
   if(scheme=="case.weight")
   {
@@ -349,10 +352,10 @@ diag.BP <- function(model,mu.link = "log",sigma.link = "log",scheme="case.weight
     BD<-B(Delta,solve(h0),B2)
     autovmaxdeltaPC<-eigen(BD,symmetric=TRUE)$val[1]
     vetordeltaPC<-eigen(BD,symmetric=TRUE)$vec[,1]
-    dmaxG.alpha=abs(vetordeltaPC)
-    vCideltaPC=2*abs(diag(BD))
-    Cb2=vCideltaPC
-    Cb.alpha=Cb2/sum(Cb2)
+    dmaxG.alpha <- abs(vetordeltaPC)
+    vCideltaPC <- 2*abs(diag(BD))
+    Cb2 <- vCideltaPC
+    Cb.alpha <- Cb2/sum(Cb2)
 
     result <- list(dmax.beta = dmaxG.beta,
                    dmax.alpha = dmaxG.alpha,
@@ -393,7 +396,7 @@ diag.BP <- function(model,mu.link = "log",sigma.link = "log",scheme="case.weight
     Cb.theta<-Cb0/sum(Cb0)
 
     #################betas##########################
-    BM=B(Delta,solve(h0),B1)
+    BM <- B(Delta,solve(h0),B1)
     autovmaxbetaRP <- eigen(BM,symmetric=TRUE)$val[1]
     vetorbetaRP <- eigen(BM,symmetric=TRUE)$vec[,1]
     dmaxG.beta <- abs(vetorbetaRP)
@@ -401,7 +404,7 @@ diag.BP <- function(model,mu.link = "log",sigma.link = "log",scheme="case.weight
     Cb1 <- vCibetaRP
     Cb.beta <- Cb1/sum(Cb1)
     ####################alpha#######################
-    BD=B(Delta,solve(h0),B2)
+    BD <- B(Delta,solve(h0),B2)
     autovmaxdeltaRP <- eigen(BD,symmetric=TRUE)$val[1]
     vetordeltaRP <- eigen(BD,symmetric=TRUE)$vec[,1]
     dmaxG.alpha <- abs(vetordeltaRP)
@@ -422,7 +425,362 @@ diag.BP <- function(model,mu.link = "log",sigma.link = "log",scheme="case.weight
 
 }
 
-#'@rdname diag.RBS
+#' @rdname diag.BP
+#'@importFrom gamlss.dist dGA
+#'@export
+diag.GA <- function(model,mu.link = "log",sigma.link = "identity")
+{
+
+  x <- model$mu.x
+  z  <- model$sigma.x
+  y <- model$y
+  p<-ncol(x)
+  q<-ncol(z)
+
+  linkstr <- mu.link
+  linkobj <- make.link(linkstr)
+  linkfun <- linkobj$linkfun
+  linkinv <- linkobj$linkinv
+  mu.eta  <- linkobj$mu.eta
+
+  sigma_linkstr <- sigma.link
+  sigma_linkobj <- make.link(sigma_linkstr)
+  sigma_linkfun <- sigma_linkobj$linkfun
+  sigma_linkinv <- sigma_linkobj$linkinv
+  sigma_mu.eta  <- sigma_linkobj$mu.eta
+
+
+  B <- function(Delta,I,M)
+  {
+    B <- (t(Delta)%*%(I-M)%*%Delta)
+    return(B)
+  }
+
+  loglik <- function(vP)
+  {
+    betab <-  vP[1:p]
+    alpha <- vP[-(1:p)]
+    eta   <- as.vector(x%*%betab)
+    tau   <- as.vector(z%*%alpha)
+    mu    <- linkinv(eta)
+    sigma <- sigma_linkinv(tau)
+
+    fy <- dGA(y,mu=mu,sigma=sigma,log = TRUE)
+
+    return(sum(fy))
+  }
+
+  muest <- model$mu.coefficients
+  sigmaest <- model$sigma.coefficients
+  x0<- c(muest,sigmaest)
+  h0 <- hessian(loglik,x0)
+
+  Ldelta <- h0[(p+1):(p+q),(p+1):(p+q)]
+  Lbeta <- h0[1:p,1:p]
+  b11 <- cbind(matrix(0, p, p), matrix(0, p, q))
+  b12 <- cbind(matrix(0, q, p), solve(Ldelta))
+  B1 <- rbind(b11, b12)  #parameter beta
+  b211 <- cbind(solve(Lbeta), matrix(0, p, q))
+  b212 <- cbind(matrix(0, q, p), matrix(0, q, q))
+  B2 <- rbind(b211,b212)  # parameter delta
+
+  b311 <- cbind(matrix(0, p, p), matrix(0, p, q))
+  b312 <-  cbind(matrix(0, q, p), matrix(0, q, q))
+  B3 <- rbind(b311,b312)  # parameter theta
+
+  ############################Case Weight####################################
+
+  mu <- model$mu.fv
+  sigma <- model$sigma.fv
+  eta <- linkfun(mu)
+  ai <- mu.eta(eta)
+  dldm <- (y - mu)/((sigma^2) * (mu^2))
+  Deltamu <- crossprod(x,diag(ai*dldm))
+
+
+  tau <- sigma_linkfun(sigma)
+  bi <- sigma_mu.eta(tau)
+  dldd <- (2/sigma^3)*((y/mu) - log(y) + log(mu) + log(sigma^2) - 1 + digamma(1/(sigma^2)))
+
+  Deltasigma <- crossprod(z,diag(bi*dldd))
+
+  Delta <- rbind(Deltamu,Deltasigma)
+
+  ##################theta#########################
+  BT<-B(Delta,solve(h0),B3)
+  autovmaxthetaPC<- eigen(BT,symmetric=TRUE)$val[1]
+  vetorpcthetaPC<- eigen(BT,symmetric=TRUE)$vec[,1]
+  dmaxG.theta<-abs(vetorpcthetaPC)
+  vCithetaPC<-2*abs(diag(BT))
+  Cb0<-vCithetaPC
+  Cb.theta<-Cb0/sum(Cb0)
+  ######################betas########################
+  BM<-B(Delta,solve(h0),B1)
+  autovmaxbetaPC<-eigen(BM,symmetric=TRUE)$val[1]
+  vetorpcbetaPC<-eigen(BM,symmetric=TRUE)$vec[,1]
+  dmaxG.beta<-abs(vetorpcbetaPC)
+  vCibetaPC<-2*abs(diag(BM))
+  Cb1<-vCibetaPC
+  Cb.beta<-Cb1/sum(Cb1)
+  ####################alphas#########################
+  BD<-B(Delta,solve(h0),B2)
+  autovmaxdeltaPC<-eigen(BD,symmetric=TRUE)$val[1]
+  vetordeltaPC<-eigen(BD,symmetric=TRUE)$vec[,1]
+  dmaxG.alpha <- abs(vetordeltaPC)
+  vCideltaPC <- 2*abs(diag(BD))
+  Cb2 <- vCideltaPC
+  Cb.alpha <- Cb2/sum(Cb2)
+
+  result <- list(dmax.beta = dmaxG.beta,
+                 dmax.alpha = dmaxG.alpha,
+                 dmax.theta = dmaxG.theta,
+                 Ci.beta = Cb.beta,
+                 Ci.alpha = Cb.alpha,
+                 Ci.theta = Cb.theta)
+  return(result)
+
+
+}
+
+
+
+#'@rdname diag.BP
+#'@importFrom gamlss.dist dIG
+#'@export
+diag.IG <- function(model,mu.link = "log",sigma.link = "identity")
+{
+
+  x <- model$mu.x
+  z  <- model$sigma.x
+  y <- model$y
+  p<-ncol(x)
+  q<-ncol(z)
+
+  linkstr <- mu.link
+  linkobj <- make.link(linkstr)
+  linkfun <- linkobj$linkfun
+  linkinv <- linkobj$linkinv
+  mu.eta  <- linkobj$mu.eta
+
+  sigma_linkstr <- sigma.link
+  sigma_linkobj <- make.link(sigma_linkstr)
+  sigma_linkfun <- sigma_linkobj$linkfun
+  sigma_linkinv <- sigma_linkobj$linkinv
+  sigma_mu.eta  <- sigma_linkobj$mu.eta
+
+
+  B <- function(Delta,I,M)
+  {
+    B <- (t(Delta)%*%(I-M)%*%Delta)
+    return(B)
+  }
+
+  loglik <- function(vP)
+  {
+    betab <- vP[1:p]
+    alpha <- vP[-(1:p)]
+    eta   <- as.vector(x%*%betab)
+    tau   <- as.vector(z%*%alpha)
+    mu    <- linkinv(eta)
+    sigma <- sigma_linkinv(tau)
+
+    fy <- dIG(y,mu=mu,sigma=sigma,log = TRUE)
+
+    return(sum(fy))
+  }
+
+  muest <- model$mu.coefficients
+  sigmaest <- model$sigma.coefficients
+  x0<- c(muest,sigmaest)
+  h0 <- hessian(loglik,x0)
+
+  Ldelta <- h0[(p+1):(p+q),(p+1):(p+q)]
+  Lbeta <- h0[1:p,1:p]
+  b11 <- cbind(matrix(0, p, p), matrix(0, p, q))
+  b12 <- cbind(matrix(0, q, p), solve(Ldelta))
+  B1 <-  rbind(b11, b12)  #parameter beta
+  b211 <- cbind(solve(Lbeta), matrix(0, p, q))
+  b212 <- cbind(matrix(0, q, p), matrix(0, q, q))
+  B2 <- rbind(b211,b212)  # parameter delta
+
+  b311 <- cbind(matrix(0, p, p), matrix(0, p, q))
+  b312 <- cbind(matrix(0, q, p), matrix(0, q, q))
+  B3 <- rbind(b311,b312)  # parameter theta
+
+  ############################Case Weight####################################
+
+  mu <- model$mu.fv
+  sigma <- model$sigma.fv
+  eta <- linkfun(mu)
+  ai <- mu.eta(eta)
+  dldm <- (y - mu)/((sigma^2) * (mu^3))
+  Deltamu <- crossprod(x,diag(ai*dldm))
+
+
+  tau <- sigma_linkfun(sigma)
+  bi <- sigma_mu.eta(tau)
+  dldd <- (-1/sigma) + ((y - mu)^2)/(y * (sigma^3) * (mu^2))
+
+  Deltasigma <- crossprod(z,diag(bi*dldd))
+
+  Delta <- rbind(Deltamu,Deltasigma)
+
+  ##################theta#########################
+  BT <- B(Delta,solve(h0),B3)
+  autovmaxthetaPC <- eigen(BT,symmetric=TRUE)$val[1]
+  vetorpcthetaPC <- eigen(BT,symmetric=TRUE)$vec[,1]
+  dmaxG.theta <- abs(vetorpcthetaPC)
+  vCithetaPC <- 2*abs(diag(BT))
+  Cb0 <- vCithetaPC
+  Cb.theta <- Cb0/sum(Cb0)
+  ######################betas########################
+  BM <- B(Delta,solve(h0),B1)
+  autovmaxbetaPC <- eigen(BM,symmetric=TRUE)$val[1]
+  vetorpcbetaPC <- eigen(BM,symmetric=TRUE)$vec[,1]
+  dmaxG.beta <- abs(vetorpcbetaPC)
+  vCibetaPC <- 2*abs(diag(BM))
+  Cb1 <- vCibetaPC
+  Cb.beta <- Cb1/sum(Cb1)
+  ####################alphas#########################
+  BD <- B(Delta,solve(h0),B2)
+  autovmaxdeltaPC <- eigen(BD,symmetric=TRUE)$val[1]
+  vetordeltaPC <- eigen(BD,symmetric=TRUE)$vec[,1]
+  dmaxG.alpha <- abs(vetordeltaPC)
+  vCideltaPC <- 2*abs(diag(BD))
+  Cb2 <- vCideltaPC
+  Cb.alpha <- Cb2/sum(Cb2)
+
+  result <- list(dmax.beta = dmaxG.beta,
+                 dmax.alpha = dmaxG.alpha,
+                 dmax.theta = dmaxG.theta,
+                 Ci.beta = Cb.beta,
+                 Ci.alpha = Cb.alpha,
+                 Ci.theta = Cb.theta)
+  return(result)
+
+
+}
+
+
+#'@rdname diag.BP
+#'@importFrom gamlss.dist dWEI3
+#'@export
+
+diag.WEI <- function(model,mu.link = "log",sigma.link = "identity")
+{
+
+  x <- model$mu.x
+  z  <- model$sigma.x
+  y <- model$y
+  p <- ncol(x)
+  q <- ncol(z)
+
+  linkstr <- mu.link
+  linkobj <- make.link(linkstr)
+  linkfun <- linkobj$linkfun
+  linkinv <- linkobj$linkinv
+  mu.eta  <- linkobj$mu.eta
+
+  sigma_linkstr <- sigma.link
+  sigma_linkobj <- make.link(sigma_linkstr)
+  sigma_linkfun <- sigma_linkobj$linkfun
+  sigma_linkinv <- sigma_linkobj$linkinv
+  sigma_mu.eta  <- sigma_linkobj$mu.eta
+
+
+  B <- function(Delta,I,M)
+  {
+    B <- (t(Delta)%*%(I-M)%*%Delta)
+    return(B)
+  }
+
+  loglik <- function(vP)
+  {
+    betab <-  vP[1:p]
+    alpha <-  vP[-(1:p)]
+    eta   <-  as.vector(x%*%betab)
+    tau   <- as.vector(z%*%alpha)
+    mu    <- linkinv(eta)
+    sigma <- sigma_linkinv(tau)
+
+    fy <- dWEI3(y,mu=mu,sigma=sigma,log=TRUE)
+
+    return(sum(fy))
+  }
+
+  muest <- model$mu.coefficients
+  sigmaest <- model$sigma.coefficients
+  x0 <- c(muest,sigmaest)
+  h0 <- hessian(loglik,x0)
+
+  Ldelta <- h0[(p+1):(p+q),(p+1):(p+q)]
+  Lbeta <- h0[1:p,1:p]
+  b11 <- cbind(matrix(0, p, p), matrix(0, p, q))
+  b12 <- cbind(matrix(0, q, p), solve(Ldelta))
+  B1 <- rbind(b11, b12)  #parameter beta
+  b211 <- cbind(solve(Lbeta), matrix(0, p, q))
+  b212 <- cbind(matrix(0, q, p), matrix(0, q, q))
+  B2 <- rbind(b211,b212)  # parameter delta
+
+  b311 <- cbind(matrix(0, p, p), matrix(0, p, q))
+  b312 <- cbind(matrix(0, q, p), matrix(0, q, q))
+  B3 <- rbind(b311,b312)  # parameter theta
+
+  ############################Case Weight####################################
+
+  mu <- model$mu.fv
+  sigma <- model$sigma.fv
+  eta <- linkfun(mu)
+  ai <- mu.eta(eta)
+  dldm <- ((y*gamma((1/sigma) + 1)/mu)^sigma - 1)*(sigma/mu)
+  Deltamu <- crossprod(x,diag(ai*dldm))
+
+
+  tau <- sigma_linkfun(sigma)
+  bi <- sigma_mu.eta(tau)
+  dldd <- 1/sigma - log(y * gamma((1/sigma) + 1)/mu)*((y * gamma((1/sigma) + 1)/mu)^sigma - 1) + (digamma((1/sigma) + 1)) * ((y * gamma((1/sigma) + 1)/mu)^sigma - 1)/sigma
+
+  Deltasigma <- crossprod(z,diag(bi*dldd))
+
+  Delta <- rbind(Deltamu,Deltasigma)
+
+  ##################theta#########################
+  BT <- B(Delta,solve(h0),B3)
+  autovmaxthetaPC <- eigen(BT,symmetric=TRUE)$val[1]
+  vetorpcthetaPC <- eigen(BT,symmetric=TRUE)$vec[,1]
+  dmaxG.theta <- abs(vetorpcthetaPC)
+  vCithetaPC <- 2*abs(diag(BT))
+  Cb0 <- vCithetaPC
+  Cb.theta <- Cb0/sum(Cb0)
+  ######################betas########################
+  BM <- B(Delta,solve(h0),B1)
+  autovmaxbetaPC <- eigen(BM,symmetric=TRUE)$val[1]
+  vetorpcbetaPC <- eigen(BM,symmetric=TRUE)$vec[,1]
+  dmaxG.beta <- abs(vetorpcbetaPC)
+  vCibetaPC <- 2*abs(diag(BM))
+  Cb1 <- vCibetaPC
+  Cb.beta <- Cb1/sum(Cb1)
+  ####################alphas#########################
+  BD <- B(Delta,solve(h0),B2)
+  autovmaxdeltaPC <- eigen(BD,symmetric=TRUE)$val[1]
+  vetordeltaPC <- eigen(BD,symmetric=TRUE)$vec[,1]
+  dmaxG.alpha <- abs(vetordeltaPC)
+  vCideltaPC <- 2*abs(diag(BD))
+  Cb2 <- vCideltaPC
+  Cb.alpha <- Cb2/sum(Cb2)
+
+  result <- list(dmax.beta = dmaxG.beta,
+                 dmax.alpha = dmaxG.alpha,
+                 dmax.theta = dmaxG.theta,
+                 Ci.beta = Cb.beta,
+                 Ci.alpha = Cb.alpha,
+                 Ci.theta = Cb.theta)
+  return(result)
+
+
+}
+
+#'@rdname diag.BP
 #'
 #'@export
 res_pearson <- function(model)

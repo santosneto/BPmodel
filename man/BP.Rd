@@ -43,19 +43,22 @@ qBP(p, mu = 1, sigma = 1, lower.tail = TRUE, log.p = FALSE)
 \item{p}{vector of probabilities.}
 }
 \value{
-returns a \code{gamlss.family} object which can be used to fit a reparameterized weighted Lindley distribution in the \code{gamlss()} function.
+returns a \code{gamlss.family} object which can be used to fit a BP distribution in the \code{gamlss()} function.
 }
 \description{
-The fuction \code{BP()} defines the BP distribution, a two paramenter
+The function \code{BP()} defines the BP distribution, a two parameter
 distribution, for a gamlss.family object to be used in GAMLSS fitting using using the
 function \code{gamlss()}, with mean equal to the parameter \code{mu} and \code{sigma}
-equal the precision parameter. The functions \code{dBP}, \code{pBP}, \code{qBP},
-\code{rBP} and \code{hBP} define the density, distribution function, quantile function, random
-genetation and hazard function for the \code{BP} parameterization of the RWL distribution.
+equal the precision parameter. The functions \code{dBP}, \code{pBP}, \code{qBP} and
+\code{rBP} define the density, distribution function, quantile function and random
+generation for the \code{BP} parameterization of the BP distribution.
 }
 \note{
-For the function RWL(), mu is the mean and sigma is the precision parameter of the reparameterized weighted Lindley distribution.
+For the function BP(), mu is the mean and sigma is the precision parameter of the BP distribution.
+}
+\references{
+Bourguignon, M., Santos-Neto, M. and Castro, M. (2018). A new regression model for positive data. arXiv.
 }
 \author{
-Manoel Santos-Neto \email{santosnetoce at protemail.com}
+Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}.
 }
