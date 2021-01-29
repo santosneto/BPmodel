@@ -837,7 +837,7 @@ res_pearson <- function(model)
 #'@import dplyr
 #'@export
 
-envelope.BP <- function(model,k=100,color = "grey50", xlabel = "Theorical Quantile",ylabel = "Empirical Quantile",font="serif")
+envelope.BP <- function(model, k = 100, color = "grey50", xlabel = "Theorical Quantile", ylabel = "Empirical Quantile", font = "serif")
 {
 
   n <- model$N
@@ -873,7 +873,7 @@ envelope.BP <- function(model,k=100,color = "grey50", xlabel = "Theorical Quanti
   rxb <- qqnorm(xb, plot.it = FALSE)$x
 
   df <- base::data.frame(r=r,xab=a,emin=base::cbind(e10,e11,e12),emax=base::cbind(e20,e21,e22),xb=xb,td=td,rxb=rxb)
-  df %>% ggplot(aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) + theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank())+theme(text=element_text(size=30,family=font))
+  df %>% ggplot(aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) + theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank())+theme(text=element_text(size=10,family=font))
 }
 
 #'@rdname envelope
@@ -918,7 +918,7 @@ envelope.GA <- function(model,k=100,color = "grey50", xlabel = "Theorical Quanti
   rxb <- qqnorm(xb, plot.it = FALSE)$x
 
   df <- data.frame(r=r,xab=a,emin=cbind(e10,e11,e12),emax=cbind(e20,e21,e22),xb=xb,td=td,rxb=rxb)
-  ggplot(df,aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) +theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank())  +theme(text=element_text(size=30,family=font))
+  ggplot(df,aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) +theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank())  +theme(text=element_text(size=10,family=font))
 }
 
 #'@rdname envelope
@@ -961,7 +961,7 @@ envelope.IG <- function(model,k=100,color = "grey50", xlabel = "Theorical Quanti
   rxb <- qqnorm(xb, plot.it = FALSE)$x
 
   df <- data.frame(r=r,xab=a,emin=cbind(e10,e11,e12),emax=cbind(e20,e21,e22),xb=xb,td=td,rxb=rxb)
-  ggplot(df,aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) +theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank()) +theme(text=element_text(size=30,family=font))
+  ggplot(df,aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) +theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank()) +theme(text=element_text(size=10,family=font))
 }
 
 #'@rdname envelope
@@ -1003,7 +1003,7 @@ envelope.RBS <- function(model,k=100,color = "grey50", xlabel = "Theorical Quant
   rxb <- qqnorm(xb, plot.it = FALSE)$x
 
   df <- data.frame(r=r,xab=a,emin=cbind(e10,e11,e12),emax=cbind(e20,e21,e22),xb=xb,td=td,rxb=rxb)
-  ggplot(df,aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) +theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank())+theme(text=element_text(size=30,family=font))
+  ggplot(df,aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) +theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank())+theme(text=element_text(size=10,family=font))
 }
 
 #'@rdname envelope
@@ -1046,5 +1046,5 @@ envelope.WEI3 <- function(model,k=100,color = "grey50", xlabel = "Theorical Quan
   rxb <- qqnorm(xb, plot.it = FALSE)$x
 
   df <- data.frame(r=r,xab=a,emin=cbind(e10,e11,e12),emax=cbind(e20,e21,e22),xb=xb,td=td,rxb=rxb)
-  ggplot(df,aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) +theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank()) +theme(text=element_text(size=30,family=font))
+  ggplot(df,aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) +theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank()) +theme(text=element_text(size=10,family=font))
 }
