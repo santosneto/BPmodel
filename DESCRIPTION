@@ -1,7 +1,7 @@
 Package: BPmodel
 Type: Package
 Title: Beta-Prime Regression Model
-Version: 0.1.0
+Version: 0.1.1
 Date: 2020-11-14
 Author: Manoel Santos-Neto [aut, cre], Tales Ribeiro-Bezerra  [cre]
 Maintainer: Tales R. Bezerra <tales.bezerra@ccc.ufcg.edu.br>

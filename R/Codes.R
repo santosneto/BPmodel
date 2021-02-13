@@ -199,7 +199,7 @@ qBP <- function(p, mu = 1, sigma = 1, lower.tail = TRUE, log.p = FALSE)
     stop(paste("mu must be positive", "\n", ""))
   if (any(sigma < 0))
     stop(paste("sigma must be positive", "\n", ""))
-  if (any(n <= 0))
+  if (any(p <= 0))
     if (any(p <= 0) | any(p >= 1))
       stop(paste("p must be between 0 and 1", "\n", ""))
 
