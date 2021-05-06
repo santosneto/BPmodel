@@ -2,7 +2,7 @@ Package: BPmodel
 Type: Package
 Title: Beta-Prime Regression Model
 <<<<<<< HEAD
-Version: 0.1.1
+Version: 0.1.0
 =======
 Version: 1.1.1
 >>>>>>> 2a2e5fa442561797e6abe43b5107598345d530f1
