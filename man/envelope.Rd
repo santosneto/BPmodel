@@ -55,32 +55,32 @@ envelope.WEI3(
 )
 }
 \arguments{
-\item{model}{object of class \code{gamlss} holding the fitted model.}
+\item{model}{object of class \code{gamlss}.}
 
 \item{k}{number of replications for envelope construction. Default is 19.}
 
-\item{color}{the color of the envelope.}
+\item{color}{a specification for the default envelope color.}
 
 \item{xlabel}{a label for the x axis.}
 
 \item{ylabel}{a label for the y axis.}
 
-\item{font}{the font used in x and y axis.}
+\item{font}{the name of a font family for x and y axis.}
 }
 \value{
-A simulated envelope of the class RBS, ZARBS and ZAGA.
+A simulated envelope of the class BP, GA, IG, RBS and WEI3.
 }
 \description{
-A normal plot with simulated envelope of the residual is produced.
+Computes simulation envelopes.
 }
 \references{
 Atkinson, A. C. (1985) Plots, transformations and regression : an introduction to graphical methods of diagnostic regression analysis. Oxford Science Publications, Oxford.
-
-Leiva, V., Santos-Neto, M., Cysneiros, F.J.A, Barros, M. (2014)  Birnbaum-Saunders statistical modelling: a new approach. \emph{Statistical Modelling}, v. 14, p. 21-48, 2014.
+Bourguignon, M., Santos-Neto, M. and Castro, M. (2018). A new regression model for positive data. arXiv.
+Leiva, V., Santos-Neto, M., Cysneiros, F.J.A, Barros, M. (2014)  Birnbaum-Saunders statistical modeling: a new approach. \emph{Statistical Modelling}, v. 14, p. 21-48, 2014.
 
 Santos-Neto, M., Cysneiros, F.J.A., Leiva, V., Barros, M. (2016) Reparameterized Birnbaum-Saunders
 regression models with varying precision. \emph{Electronic Journal of Statistics}, 10, 2825--2855. doi: \email{10.1214/16-EJS1187}.
 }
 \author{
-Manoel Santos-Neto \email{manoel.ferreira@ufcg.edu.br}, F.J.A. Cysneiros \email{cysneiros@de.ufpe.br}, Victor Leiva \email{victorleivasanchez@gmail.com} and Michelli Barros \email{michelli.karinne@gmail.com}
+Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}
 }

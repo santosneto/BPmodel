@@ -1,15 +1,20 @@
 Package: BPmodel
 Type: Package
 Title: Beta-Prime Regression Model
+<<<<<<< HEAD
 Version: 0.1.1
+=======
+Version: 1.1.1
+>>>>>>> 2a2e5fa442561797e6abe43b5107598345d530f1
 Date: 2020-11-14
-Author: Manoel Santos-Neto [aut, cre], Tales Ribeiro-Bezerra  [cre]
+Author: Manoel Santos-Neto [aut, cre], Tales Ribeiro-Bezerra  [cre], Marcelo Bourguignon [aut], Mário de Castro [aut]
 Maintainer: Tales R. Bezerra <tales.bezerra@ccc.ufcg.edu.br>
 Description: Beta-Prime regression for modeling beta-prime-distributed dependent variables. 
-Depends: R (>= 3.1.2), stats, graphics, pracma, dplyr
-Imports: gamlss, base, ggplot2, extraDistr, gamlss.dist
+Depends: R (>= 3.1.2), stats, graphics, pracma, dplyr, Deriv
+Imports: gamlss, base, ggplot2, extraDistr, gamlss.dist, RBS
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Suggests: testthat
+Remotes: santosneto/RBS
