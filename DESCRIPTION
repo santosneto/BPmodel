@@ -4,7 +4,7 @@ Title: Beta-Prime Regression Model
 Version: 1.1.1
 Date: 2020-11-14
 Authors@R: c(
-    person("Manoel", "Santos-Neto", email = "manoel.ferreira@professor.ufcg.edu.br", role = c("aut","cre")),
+    person("Manoel", "Santos-Neto", email = "manoel.ferreira@professor.ufcg.edu.br", role = "aut"),
     person("Marcelo", "Bourguignon", email = "m.p.bourguignon@gmail.com", role = "aut"),
     person("Mário", "de Castro", email = "mcastro@icmc.usp.br", role = "aut"),
     person("Tales", "Ribeiro-Bezerra", email = "talesoriebir@gmail.com", role = "cre"))
