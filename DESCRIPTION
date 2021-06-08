@@ -4,11 +4,11 @@ Title: Beta-Prime Regression Model
 Version: 1.1.1
 Date: 2020-11-14
 Authors@R: c(
-    person("Manoel", "Santos-Neto", email = "XX@XX.com", role = c("aut","cre")),
-    person("Marcelo", "Bourguignon", email = "XX@XX.com", role = "aut"),
-    person("Mário", "de Castro", email = "XX@XX.com", role = "aut"),
-    person("Tales", "Ribeiro-Bezerra", email = "XX@XX.com", role = "cre"))
-Maintainer: Tales R. Bezerra <tales.bezerra@ccc.ufcg.edu.br>
+    person("Manoel", "Santos-Neto", email = "manoel.ferreira@professor.ufcg.edu.br", role = c("aut","cre")),
+    person("Marcelo", "Bourguignon", email = "m.p.bourguignon@gmail.com", role = "aut"),
+    person("Mário", "de Castro", email = "mcastro@icmc.usp.br", role = "aut"),
+    person("Tales", "Ribeiro-Bezerra", email = "talesoriebir@gmail.com", role = "cre"))
+Maintainer: Tales R. Bezerra <talesoriebir@gmail.com>
 Description: Beta-Prime regression for modeling beta-prime-distributed dependent variables. 
 Depends: 
     R (>= 3.1.2), 
