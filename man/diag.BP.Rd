@@ -5,17 +5,31 @@
 \alias{diag.GA}
 \alias{diag.IG}
 \alias{diag.WEI}
-\alias{residuals.pearson}
 \alias{res_pearson}
 \title{Diagnostic Analysis - Local Influence}
 \usage{
 diag.BP(model, mu.link = "log", sigma.link = "log", scheme = "case.weight")
 
-diag.GA(model, mu.link = "log", sigma.link = "identity")
+diag.GA(
+  model,
+  mu.link = "log",
+  sigma.link = "identity",
+  scheme = "case.weight"
+)
 
-diag.IG(model, mu.link = "log", sigma.link = "identity")
+diag.IG(
+  model,
+  mu.link = "log",
+  sigma.link = "identity",
+  scheme = "case.weight"
+)
 
-diag.WEI(model, mu.link = "log", sigma.link = "identity")
+diag.WEI(
+  model,
+  mu.link = "log",
+  sigma.link = "identity",
+  scheme = "case.weight"
+)
 
 res_pearson(model)
 }
@@ -32,11 +46,11 @@ res_pearson(model)
 Local influence measures.
 }
 \description{
-Diagnostics for the BP model
+Diagnostics for the BP, GA, IG and WEI regression models
 }
 \references{
-Bourguignon, M., Santos-Neto, M. and Castro, M. (2018). A new regression model for positive data. arXiv.
+Bourguignon, M., Santos-Neto, M. and Castro, M. A new regression model for positive random variables with skewed and long tail. \emph{METRON}, v. 79, p. 33--55, 2021. \url{http://dx.doi.org/10.1007/s40300-021-00203-y}
 }
 \author{
-Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}
+Manoel Santos-Neto \email{manoel.ferreira at professor.ufcg.edu.br}
 }

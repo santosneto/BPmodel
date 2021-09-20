@@ -22,12 +22,12 @@
 #'
 #' @param mu.link object for which the extraction of model residuals is meaningful.
 #' @param sigma.link type of residual to be used.
-#' @param x,q vector of quantiles
-#' @param mu vector of scale parameter values
-#' @param sigma vector of shape parameter values
-#' @param log.p, log.p logical; if TRUE, probabilities p are given as log(p).
-#' @param log, logical; if TRUE, quantiles are given as log.
-#' @param lower.tail logical; if TRUE (default), probabilities are P[X <= x], otherwise, P[X > x]
+#' @param x,q vector of quantiles.
+#' @param mu vector of scale parameter values.
+#' @param sigma vector of shape parameter values.
+#' @param log.p log.p logical; if TRUE, probabilities p are given as log(p).
+#' @param log logical; if TRUE, quantiles are given as log.
+#' @param lower.tail logical; if TRUE (default), probabilities are P[X <= x], otherwise, P[X > x].
 #' @param p vector of probabilities.
 #' @param n number of observations. If \code{length(n) > 1}, the length is taken to be the number required.
 #'
@@ -36,35 +36,47 @@
 #'
 #'@note For the function BP(), mu is the mean and sigma is the precision parameter of the BP distribution.
 #'
+#'
 #'@author
-#'Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}.
+#'Manoel Santos-Neto \email{manoel.ferreira at professor.ufcg.edu.br}
 #'
 #'@references
 #'
-#'Bourguignon, M., Santos-Neto, M. and Castro, M. (2018). A new regression model for positive data. arXiv.
+#'Rigby, R.A., Stasinopoulos, D.M., Heller, G.Z., and De Bastiani, F. Distributions for modeling location, scale, and shape: Using GAMLSS in R, London: Chapman and Hall/CRC, 2019.
+#'
+#'Stasinopoulos D.M., Rigby R.A., Heller G., Voudouris V., and De Bastiani F. Flexible Regression and Smoothing: Using GAMLSS in R, London: Chapman and Hall/CRC, 2017
+#'
+#'Bourguignon, M., Santos-Neto, M. and Castro, M. A new regression model for positive random variables with skewed and long tail. \emph{METRON}, v. 79, p. 33--55, 2021. \url{http://dx.doi.org/10.1007/s40300-021-00203-y}
 #'
 #'
+#'@examples
+#'y <- rBP(n = 100)
+#'hist(y)
+#'plot(function(x) dBP(x), 0.0001, 8)
+#'gamlss::gamlss(y~1, family = BP)
 #'@importFrom gamlss.dist checklink
 #'
 #'@export
 
-BP <- function (mu.link = "log", sigma.link = "log")
-{
-  mstats <- checklink("mu.link", "Beta Prime", substitute(mu.link), c("log", "identity", "sqrt"))
-  dstats <- checklink("sigma.link", "Beta Prime",substitute(sigma.link), c("log", "identity", "sqrt"))
-  structure(list(family = c("BP", "Beta Prime"),
-                 parameters = list(mu = TRUE,sigma = TRUE), nopar = 2, type = "Continuous",
-                 mu.link = as.character(substitute(mu.link)),
-                 sigma.link = as.character(substitute(sigma.link)),
-                 mu.linkfun = mstats$linkfun,
-                 sigma.linkfun = dstats$linkfun,
-                 mu.linkinv = mstats$linkinv,
-                 sigma.linkinv = dstats$linkinv,
-                 mu.dr = mstats$mu.eta,
-                 sigma.dr = dstats$mu.eta,
+BP <- function (mu.link = "log", sigma.link = "log"){
 
+  mstats <- checklink("mu.link", "Beta Prime", substitute(mu.link), c("log", "identity", "sqrt", "own"))
+  dstats <- checklink("sigma.link", "Beta Prime",substitute(sigma.link), c("log", "identity", "sqrt", "own"))
 
-                 dldm = function(y, mu, sigma){
+  structure(
+    list(family = c("BP", "Beta Prime"),
+     parameters = list(mu = TRUE,sigma = TRUE),
+          nopar = 2,
+           type = "Continuous",
+        mu.link = as.character(substitute(mu.link)),
+     sigma.link = as.character(substitute(sigma.link)),
+     mu.linkfun = mstats$linkfun,
+  sigma.linkfun = dstats$linkfun,
+     mu.linkinv = mstats$linkinv,
+  sigma.linkinv = dstats$linkinv,
+          mu.dr = mstats$mu.eta,
+       sigma.dr = dstats$mu.eta,
+           dldm = function(y, mu, sigma){
                    a <- mu*(1+sigma)
                    b <- mu*(1+sigma)+sigma+2
                    Phi <-  (1+sigma)
@@ -74,7 +86,7 @@ BP <- function (mu.link = "log", sigma.link = "log")
 
                    dldm
                  },
-                 d2ldm2 = function(mu, sigma){
+         d2ldm2 = function(mu, sigma){
                    Phi2 <- (1+sigma)^2
                    a <- mu*(1+sigma)
                    b <- mu*(1+sigma)+sigma+2
@@ -82,7 +94,7 @@ BP <- function (mu.link = "log", sigma.link = "log")
 
                    d2dldm2
                  },
-                 dldd = function(y, mu, sigma){
+           dldd = function(y, mu, sigma){
                    Phi <-  (1+sigma)
                    a <- mu*(1+sigma)
                    b <- mu*(1+sigma)+sigma+2
@@ -93,7 +105,7 @@ BP <- function (mu.link = "log", sigma.link = "log")
 
                    dldd
                  },
-                 d2ldd2 = function(mu,sigma){
+          d2ldd2 = function(mu,sigma){
                    Phi <-  (1+sigma)
                    a <- mu*(1+sigma)
                    b <- mu*(1+sigma)+sigma+2
@@ -103,7 +115,7 @@ BP <- function (mu.link = "log", sigma.link = "log")
                    d2ldd2
 
                  },
-                 d2ldmdd = function(mu,sigma){
+          d2ldmdd = function(mu,sigma){
 
                    a <- mu*(1+sigma)
                    b <- mu*(1+sigma)+sigma+2
@@ -115,20 +127,25 @@ BP <- function (mu.link = "log", sigma.link = "log")
                    d2ldmdd
 
                  },
-                 G.dev.incr = function(y, mu, sigma,...){-2*dBP(y, mu, sigma, log = TRUE)},
+            G.dev.incr = function(y, mu, sigma,...){-2*dBP(y, mu, sigma, log = TRUE)},
                  rqres = expression(rqres(pfun = "pBP", type = "Continuous", y = y, mu = mu, sigma = sigma)),
                  mu.initial = expression({mu <- y + mean(y)/2 }),
                  sigma.initial = expression({sigma <- rep(1,length(y)) }),
                  mu.valid = function(mu) all(mu > 0),
                  sigma.valid = function(sigma) all(sigma > 0),
                  y.valid = function(y) all(y > 0)),
+                 mean = function(mu, sigma) mu,
+             variance = function(mu, sigma) (mu*(1+mu))/sigma,
             class = c("gamlss.family","family"))
 }
 
 #'@rdname BP
 #'@export
 
-dBP <- function(x,mu=1,sigma=1,log=FALSE)
+dBP <- function(x,
+                mu = 1.0,
+                sigma = 1.0,
+                log = FALSE)
 {
   if (any(mu < 0))
     stop(paste("mu must be positive", "\n", ""))
@@ -137,10 +154,14 @@ dBP <- function(x,mu=1,sigma=1,log=FALSE)
   if (any(x <= 0))
     stop(paste("x must be positive", "\n", ""))
 
-  a <- mu*(1+sigma)
+  a <- mu*(1 + sigma)
   b <- 2 + sigma
 
-  fy <- extraDistr::dbetapr(x, shape1 = a, shape2 = b, scale = 1, log = log)
+  fy <- extraDistr::dbetapr(x,
+                            shape1 = a,
+                            shape2 = b,
+                            scale = 1.0,
+                            log = log)
   fy
 
 }
@@ -149,7 +170,11 @@ dBP <- function(x,mu=1,sigma=1,log=FALSE)
 #'
 #'@export
 
-pBP <-  function(q,mu=1,sigma=1, lower.tail = TRUE, log.p = FALSE)
+pBP <-  function(q,
+                 mu = 1.0,
+                 sigma = 1.0,
+                 lower.tail = TRUE,
+                 log.p = FALSE)
 {
   if (any(mu < 0))
     stop(paste("mu must be positive", "\n", ""))
@@ -170,7 +195,9 @@ pBP <-  function(q,mu=1,sigma=1, lower.tail = TRUE, log.p = FALSE)
 #'
 #'@export
 
-rBP <- function(n,mu=1,sigma=1)
+rBP <- function(n = 1,
+                mu = 1.0,
+                sigma = 1.0)
 {
   if (any(mu < 0))
     stop(paste("mu must be positive", "\n", ""))
@@ -193,7 +220,11 @@ rBP <- function(n,mu=1,sigma=1)
 #'
 #'@export
 
-qBP <- function(p, mu = 1, sigma = 1, lower.tail = TRUE, log.p = FALSE)
+qBP <- function(p,
+                mu = 1.0,
+                sigma = 1.0,
+                lower.tail = TRUE,
+                log.p = FALSE)
 {
   if (any(mu < 0))
     stop(paste("mu must be positive", "\n", ""))
@@ -218,38 +249,40 @@ qBP <- function(p, mu = 1, sigma = 1, lower.tail = TRUE, log.p = FALSE)
 #'@aliases diag.GA
 #'@aliases diag.IG
 #'@aliases diag.WEI
-#'@aliases residuals.pearson
+#'@aliases res_pearson
 #'
 #'@title Diagnostic Analysis - Local Influence
 #'
-#'@description Diagnostics for the BP model
+#'@description Diagnostics for the BP, GA, IG and WEI regression models
 #'
 #'@param model Object of class \code{gamlss} holding the fitted model.
-#'@param scheme Default is "case.weight". But, can be "response".
 #'@param mu.link  Defines the mu.link, with "identity" link as the default for the mu parameter.
 #'@param sigma.link Defines the sigma.link, with "identity" link as the default for the sigma parameter.
-
+#'@param scheme Default is "case.weight". But, can be "response".
 #'
 #'@return Local influence measures.
 #'
-#' @author
-#'Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}
+#'@author
+#'Manoel Santos-Neto \email{manoel.ferreira at professor.ufcg.edu.br}
 #'
 #'@references
-#'Bourguignon, M., Santos-Neto, M. and Castro, M. (2018). A new regression model for positive data. arXiv.
+#'Bourguignon, M., Santos-Neto, M. and Castro, M. A new regression model for positive random variables with skewed and long tail. \emph{METRON}, v. 79, p. 33--55, 2021. \url{http://dx.doi.org/10.1007/s40300-021-00203-y}
 #'
 #'@importFrom pracma hessian ones
 #'@importFrom stats make.link sd
 #'@export
 
-diag.BP <- function(model,mu.link = "log",sigma.link = "log",scheme="case.weight")
+diag.BP <- function(model,
+                    mu.link = "log",
+                    sigma.link = "log",
+                    scheme = "case.weight")
 {
 
-  x <- model$mu.x
+  x  <- model$mu.x
   z  <- model$sigma.x
-  y <- model$y
-  p<-ncol(x)
-  q<-ncol(z)
+  y  <- model$y
+  p  <- ncol(x)
+  q  <- ncol(z)
 
   linkstr <- mu.link
   linkobj <- make.link(linkstr)
@@ -287,106 +320,103 @@ diag.BP <- function(model,mu.link = "log",sigma.link = "log",scheme="case.weight
     return(sum(fy))
   }
 
-  muest <- model$mu.coefficients
+  muest    <- model$mu.coefficients
   sigmaest <- model$sigma.coefficients
-  x0<- c(muest,sigmaest)
-  h0 <- hessian(loglik,x0)
+  x0       <- c(muest,sigmaest)
+  h0       <- hessian(loglik,x0)
 
   Ldelta <- h0[(p+1):(p+q),(p+1):(p+q)]
-  Lbeta <- h0[1:p,1:p]
-  b11 <- cbind(matrix(0, p, p), matrix(0, p, q))
-  b12 <- cbind(matrix(0, q, p), solve(Ldelta))
-  B1 <- rbind(b11, b12)  #parameter beta
-  b211 <- cbind(solve(Lbeta), matrix(0, p, q))
-  b212 <- cbind(matrix(0, q, p), matrix(0, q, q))
-  B2 <- rbind(b211,b212)  # parameter delta
+  Lbeta  <- h0[1:p,1:p]
+  b11    <- cbind(matrix(0, p, p), matrix(0, p, q))
+  b12    <- cbind(matrix(0, q, p), solve(Ldelta))
+  B1     <- rbind(b11, b12)  #parameter beta
+  b211   <- cbind(solve(Lbeta), matrix(0, p, q))
+  b212   <- cbind(matrix(0, q, p), matrix(0, q, q))
+  B2     <- rbind(b211,b212)  # parameter delta
 
   b311 <- cbind(matrix(0, p, p), matrix(0, p, q))
   b312 <- cbind(matrix(0, q, p), matrix(0, q, q))
-  B3 <- rbind(b311,b312)  # parameter theta
+  B3   <- rbind(b311,b312)  # parameter theta
 
-  if(scheme=="case.weight")
+  if(scheme == "case.weight")
   {
-    ############################Case Weight####################################
 
-    mu <- model$mu.fv
-    sigma <- model$sigma.fv
-    eta <- linkfun(mu)
-    ai <- mu.eta(eta)
-    a <- mu*(1+sigma)
-    b <- mu*(1+sigma)+sigma+2
-    Phi <-  (1+sigma)
-    yast <- log(y) - log(1+y)
-    muast <- digamma(a) - digamma(b)
-    dldm <- Phi*(yast - muast)
+    mu      <- model$mu.fv
+    sigma   <- model$sigma.fv
+    eta     <- linkfun(mu)
+    ai      <- mu.eta(eta)
+    a       <- mu*(1+sigma)
+    b       <- mu*(1+sigma)+sigma+2
+    Phi     <-  (1+sigma)
+    yast    <- log(y) - log(1+y)
+    muast   <- digamma(a) - digamma(b)
+    dldm    <- Phi*(yast - muast)
     Deltamu <- crossprod(x,diag(ai*dldm))
 
 
-    tau <- sigma_linkfun(sigma)
-    bi <- sigma_mu.eta(tau)
-    ystar <- mu*log(y) - (1+mu)*log(1+y)
+    tau    <- sigma_linkfun(sigma)
+    bi     <- sigma_mu.eta(tau)
+    ystar  <- mu*log(y) - (1+mu)*log(1+y)
     mustar <- mu*digamma(a) - (1+mu)*digamma(b) + digamma(Phi+1)
-    dldd <- ystar - mustar
+    dldd   <- ystar - mustar
 
-    Deltasigma <- crossprod(z,diag(bi*dldd))
+    Deltasigma <- crossprod(z, diag(bi*dldd))
 
-    Delta <- rbind(Deltamu,Deltasigma)
+    Delta <- rbind(Deltamu, Deltasigma)
 
     ##################theta#########################
-    BT<-B(Delta,solve(h0),B3)
-    autovmaxthetaPC<- eigen(BT,symmetric=TRUE)$val[1]
-    vetorpcthetaPC<- eigen(BT,symmetric=TRUE)$vec[,1]
-    dmaxG.theta<-abs(vetorpcthetaPC)
-    vCithetaPC<-2*abs(diag(BT))
-    Cb0<-vCithetaPC
-    Cb.theta<-Cb0/sum(Cb0)
+    BT <- B(Delta, solve(h0), B3)
+    autovmaxthetaPC <- eigen(BT, symmetric=TRUE)$val[1]
+    vetorpcthetaPC <- eigen(BT, symmetric=TRUE)$vec[,1]
+    dmaxG.theta <- abs(vetorpcthetaPC)
+    vCithetaPC <- 2*abs(diag(BT))
+    Cb0 <- vCithetaPC
+    Cb.theta <- Cb0/sum(Cb0)
     ######################betas########################
-    BM<-B(Delta,solve(h0),B1)
-    autovmaxbetaPC<-eigen(BM,symmetric=TRUE)$val[1]
-    vetorpcbetaPC<-eigen(BM,symmetric=TRUE)$vec[,1]
-    dmaxG.beta<-abs(vetorpcbetaPC)
-    vCibetaPC<-2*abs(diag(BM))
-    Cb1<-vCibetaPC
-    Cb.beta<-Cb1/sum(Cb1)
+    BM <- B(Delta, solve(h0), B1)
+    autovmaxbetaPC <- eigen(BM, symmetric = TRUE)$val[1]
+    vetorpcbetaPC <- eigen(BM, symmetric = TRUE)$vec[,1]
+    dmaxG.beta <- abs(vetorpcbetaPC)
+    vCibetaPC <- 2*abs(diag(BM))
+    Cb1 <- vCibetaPC
+    Cb.beta <- Cb1/sum(Cb1)
     ####################alphas#########################
-    BD<-B(Delta,solve(h0),B2)
-    autovmaxdeltaPC<-eigen(BD,symmetric=TRUE)$val[1]
-    vetordeltaPC<-eigen(BD,symmetric=TRUE)$vec[,1]
+    BD <- B(Delta, solve(h0),B2)
+    autovmaxdeltaPC <- eigen(BD, symmetric = TRUE)$val[1]
+    vetordeltaPC <- eigen(BD, symmetric = TRUE)$vec[,1]
     dmaxG.alpha <- abs(vetordeltaPC)
     vCideltaPC <- 2*abs(diag(BD))
     Cb2 <- vCideltaPC
     Cb.alpha <- Cb2/sum(Cb2)
 
-    result <- list(dmax.beta = dmaxG.beta,
+    result <- list(dmax.beta  = dmaxG.beta,
                    dmax.alpha = dmaxG.alpha,
                    dmax.theta = dmaxG.theta,
-                   Ci.beta = Cb.beta,
-                   Ci.alpha = Cb.alpha,
-                   Ci.theta = Cb.theta)
+                   Ci.beta    = Cb.beta,
+                   Ci.alpha   = Cb.alpha,
+                   Ci.theta   = Cb.theta)
     return(result)
   }
 
-  if(scheme=="response")
+  if(scheme == "response")
   {
-    ############################Response####################################
-    mu <- model$mu.fv
+    mu    <- model$mu.fv
     sigma <- model$sigma.fv
-    eta <- linkfun(mu)
-    ai <- mu.eta(eta)
-    tau <- sigma_linkfun(sigma)
-    bi <- sigma_mu.eta(tau)
-    sy<- sqrt((mu*(1+mu))/sigma)
-    Phi <-  (1+sigma)
+    eta   <- linkfun(mu)
+    ai    <- mu.eta(eta)
+    tau   <- sigma_linkfun(sigma)
+    bi    <- sigma_mu.eta(tau)
+    sy    <- sqrt((mu*(1+mu))/sigma)
+    Phi   <-  (1+sigma)
 
-    dymu <- Phi*(1/(y*(1+y)))
+    dymu    <- Phi*(1/(y*(1+y)))
     Deltamu <- crossprod(x,diag(ai*dymu*sy))
-    p<-ncol(x)
-    q<-ncol(z)
+    p       <- ncol(x)
+    q       <- ncol(z)
     dysigma <- mu*(1/(y*(1+y))) - 1/(1+y)
     Deltasigma <- crossprod(z,diag(bi*dysigma*sy))
-    Delta <- rbind(Deltamu,Deltasigma)
+    Delta   <- rbind(Deltamu,Deltasigma)
 
-    ###############thetas###########################
     BT<-B(Delta,solve(h0),B3)
     autovmaxthetaPC<- eigen(BT,symmetric=TRUE)$val[1]
     vetorthetaRP<- eigen(BT,symmetric=TRUE)$vec[,1]
@@ -395,7 +425,6 @@ diag.BP <- function(model,mu.link = "log",sigma.link = "log",scheme="case.weight
     Cb0<-vCithetaRP
     Cb.theta<-Cb0/sum(Cb0)
 
-    #################betas##########################
     BM <- B(Delta,solve(h0),B1)
     autovmaxbetaRP <- eigen(BM,symmetric=TRUE)$val[1]
     vetorbetaRP <- eigen(BM,symmetric=TRUE)$vec[,1]
@@ -403,7 +432,7 @@ diag.BP <- function(model,mu.link = "log",sigma.link = "log",scheme="case.weight
     vCibetaRP <- 2*abs(diag(BM))
     Cb1 <- vCibetaRP
     Cb.beta <- Cb1/sum(Cb1)
-    ####################alpha#######################
+
     BD <- B(Delta,solve(h0),B2)
     autovmaxdeltaRP <- eigen(BD,symmetric=TRUE)$val[1]
     vetordeltaRP <- eigen(BD,symmetric=TRUE)$vec[,1]
@@ -413,29 +442,33 @@ diag.BP <- function(model,mu.link = "log",sigma.link = "log",scheme="case.weight
     Cb.alpha <- Cb2/sum(Cb2)
 
 
-    result <- list(dmax.beta = dmaxG.beta,
+    result <- list(dmax.beta  = dmaxG.beta,
                    dmax.alpha = dmaxG.alpha,
                    dmax.theta = dmaxG.theta,
-                   Ci.beta = Cb.beta,
-                   Ci.alpha = Cb.alpha,
-                   Ci.theta = Cb.theta)
+                   Ci.beta    = Cb.beta,
+                   Ci.alpha   = Cb.alpha,
+                   Ci.theta   = Cb.theta)
     return(result)
   }
 
 
 }
 
-#' @rdname diag.BP
+#'@rdname diag.BP
 #'@importFrom gamlss.dist dGA
 #'@export
-diag.GA <- function(model,mu.link = "log",sigma.link = "identity")
+#'
+diag.GA <- function(model,
+                    mu.link = "log",
+                    sigma.link = "identity",
+                    scheme = "case.weight")
 {
 
   x <- model$mu.x
-  z  <- model$sigma.x
+  z <- model$sigma.x
   y <- model$y
-  p<-ncol(x)
-  q<-ncol(z)
+  p <-ncol(x)
+  q <-ncol(z)
 
   linkstr <- mu.link
   linkobj <- make.link(linkstr)
@@ -470,25 +503,24 @@ diag.GA <- function(model,mu.link = "log",sigma.link = "identity")
     return(sum(fy))
   }
 
-  muest <- model$mu.coefficients
+  muest    <- model$mu.coefficients
   sigmaest <- model$sigma.coefficients
-  x0<- c(muest,sigmaest)
-  h0 <- hessian(loglik,x0)
+  x0       <- c(muest,sigmaest)
+  h0       <- hessian(loglik,x0)
 
   Ldelta <- h0[(p+1):(p+q),(p+1):(p+q)]
-  Lbeta <- h0[1:p,1:p]
-  b11 <- cbind(matrix(0, p, p), matrix(0, p, q))
-  b12 <- cbind(matrix(0, q, p), solve(Ldelta))
-  B1 <- rbind(b11, b12)  #parameter beta
-  b211 <- cbind(solve(Lbeta), matrix(0, p, q))
-  b212 <- cbind(matrix(0, q, p), matrix(0, q, q))
-  B2 <- rbind(b211,b212)  # parameter delta
+  Lbeta  <- h0[1:p,1:p]
+  b11    <- cbind(matrix(0, p, p), matrix(0, p, q))
+  b12    <- cbind(matrix(0, q, p), solve(Ldelta))
+  B1     <- rbind(b11, b12)
+  b211   <- cbind(solve(Lbeta), matrix(0, p, q))
+  b212   <- cbind(matrix(0, q, p), matrix(0, q, q))
+  B2     <- rbind(b211,b212)
 
   b311 <- cbind(matrix(0, p, p), matrix(0, p, q))
   b312 <-  cbind(matrix(0, q, p), matrix(0, q, q))
-  B3 <- rbind(b311,b312)  # parameter theta
+  B3   <- rbind(b311,b312)
 
-  ############################Case Weight####################################
 
   mu <- model$mu.fv
   sigma <- model$sigma.fv
@@ -506,7 +538,6 @@ diag.GA <- function(model,mu.link = "log",sigma.link = "identity")
 
   Delta <- rbind(Deltamu,Deltasigma)
 
-  ##################theta#########################
   BT<-B(Delta,solve(h0),B3)
   autovmaxthetaPC<- eigen(BT,symmetric=TRUE)$val[1]
   vetorpcthetaPC<- eigen(BT,symmetric=TRUE)$vec[,1]
@@ -514,20 +545,20 @@ diag.GA <- function(model,mu.link = "log",sigma.link = "identity")
   vCithetaPC<-2*abs(diag(BT))
   Cb0<-vCithetaPC
   Cb.theta<-Cb0/sum(Cb0)
-  ######################betas########################
-  BM<-B(Delta,solve(h0),B1)
+
+    BM<-B(Delta,solve(h0),B1)
   autovmaxbetaPC<-eigen(BM,symmetric=TRUE)$val[1]
   vetorpcbetaPC<-eigen(BM,symmetric=TRUE)$vec[,1]
   dmaxG.beta<-abs(vetorpcbetaPC)
   vCibetaPC<-2*abs(diag(BM))
   Cb1<-vCibetaPC
   Cb.beta<-Cb1/sum(Cb1)
-  ####################alphas#########################
-  BD<-B(Delta,solve(h0),B2)
-  autovmaxdeltaPC<-eigen(BD,symmetric=TRUE)$val[1]
-  vetordeltaPC<-eigen(BD,symmetric=TRUE)$vec[,1]
+
+  BD  <-B(Delta,solve(h0),B2)
+  autovmaxdeltaPC <-eigen(BD,symmetric=TRUE)$val[1]
+  vetordeltaPC <-eigen(BD,symmetric=TRUE)$vec[,1]
   dmaxG.alpha <- abs(vetordeltaPC)
-  vCideltaPC <- 2*abs(diag(BD))
+  vCideltaPC  <- 2*abs(diag(BD))
   Cb2 <- vCideltaPC
   Cb.alpha <- Cb2/sum(Cb2)
 
@@ -547,14 +578,18 @@ diag.GA <- function(model,mu.link = "log",sigma.link = "identity")
 #'@rdname diag.BP
 #'@importFrom gamlss.dist dIG
 #'@export
-diag.IG <- function(model,mu.link = "log",sigma.link = "identity")
+
+diag.IG <- function(model,
+                    mu.link = "log",
+                    sigma.link = "identity",
+                    scheme = "case.weight")
 {
 
   x <- model$mu.x
-  z  <- model$sigma.x
+  z <- model$sigma.x
   y <- model$y
-  p<-ncol(x)
-  q<-ncol(z)
+  p <- ncol(x)
+  q <- ncol(z)
 
   linkstr <- mu.link
   linkobj <- make.link(linkstr)
@@ -575,8 +610,8 @@ diag.IG <- function(model,mu.link = "log",sigma.link = "identity")
     return(B)
   }
 
-  loglik <- function(vP)
-  {
+  loglik <- function(vP){
+
     betab <- vP[1:p]
     alpha <- vP[-(1:p)]
     eta   <- as.vector(x%*%betab)
@@ -584,30 +619,29 @@ diag.IG <- function(model,mu.link = "log",sigma.link = "identity")
     mu    <- linkinv(eta)
     sigma <- sigma_linkinv(tau)
 
-    fy <- dIG(y,mu=mu,sigma=sigma,log = TRUE)
+    fy <- dIG(y, mu = mu, sigma = sigma, log = TRUE)
 
     return(sum(fy))
   }
 
-  muest <- model$mu.coefficients
+  muest    <- model$mu.coefficients
   sigmaest <- model$sigma.coefficients
-  x0<- c(muest,sigmaest)
-  h0 <- hessian(loglik,x0)
+  x0       <- c(muest,sigmaest)
+  h0       <- hessian(loglik,x0)
 
-  Ldelta <- h0[(p+1):(p+q),(p+1):(p+q)]
-  Lbeta <- h0[1:p,1:p]
-  b11 <- cbind(matrix(0, p, p), matrix(0, p, q))
-  b12 <- cbind(matrix(0, q, p), solve(Ldelta))
-  B1 <-  rbind(b11, b12)  #parameter beta
-  b211 <- cbind(solve(Lbeta), matrix(0, p, q))
-  b212 <- cbind(matrix(0, q, p), matrix(0, q, q))
-  B2 <- rbind(b211,b212)  # parameter delta
+  Ldelta   <- h0[(p+1):(p+q), (p+1):(p+q)]
+  Lbeta    <- h0[1:p, 1:p]
+  b11      <- cbind(matrix(0, p, p), matrix(0, p, q))
+  b12      <- cbind(matrix(0, q, p), solve(Ldelta))
+  B1       <-  rbind(b11, b12)
+  b211     <- cbind(solve(Lbeta), matrix(0, p, q))
+  b212     <- cbind(matrix(0, q, p), matrix(0, q, q))
+  B2       <- rbind(b211, b212)
 
   b311 <- cbind(matrix(0, p, p), matrix(0, p, q))
   b312 <- cbind(matrix(0, q, p), matrix(0, q, q))
-  B3 <- rbind(b311,b312)  # parameter theta
+  B3 <- rbind(b311,b312)
 
-  ############################Case Weight####################################
 
   mu <- model$mu.fv
   sigma <- model$sigma.fv
@@ -625,26 +659,25 @@ diag.IG <- function(model,mu.link = "log",sigma.link = "identity")
 
   Delta <- rbind(Deltamu,Deltasigma)
 
-  ##################theta#########################
-  BT <- B(Delta,solve(h0),B3)
-  autovmaxthetaPC <- eigen(BT,symmetric=TRUE)$val[1]
-  vetorpcthetaPC <- eigen(BT,symmetric=TRUE)$vec[,1]
+  BT <- B(Delta, solve(h0), B3)
+  autovmaxthetaPC <- eigen(BT, symmetric = TRUE)$val[1]
+  vetorpcthetaPC <-  eigen(BT, symmetric = TRUE)$vec[,1]
   dmaxG.theta <- abs(vetorpcthetaPC)
   vCithetaPC <- 2*abs(diag(BT))
   Cb0 <- vCithetaPC
   Cb.theta <- Cb0/sum(Cb0)
-  ######################betas########################
-  BM <- B(Delta,solve(h0),B1)
-  autovmaxbetaPC <- eigen(BM,symmetric=TRUE)$val[1]
-  vetorpcbetaPC <- eigen(BM,symmetric=TRUE)$vec[,1]
+
+    BM <- B(Delta,solve(h0),B1)
+  autovmaxbetaPC <- eigen(BM,symmetric = TRUE)$val[1]
+  vetorpcbetaPC <-  eigen(BM,symmetric = TRUE)$vec[,1]
   dmaxG.beta <- abs(vetorpcbetaPC)
   vCibetaPC <- 2*abs(diag(BM))
   Cb1 <- vCibetaPC
   Cb.beta <- Cb1/sum(Cb1)
-  ####################alphas#########################
+
   BD <- B(Delta,solve(h0),B2)
-  autovmaxdeltaPC <- eigen(BD,symmetric=TRUE)$val[1]
-  vetordeltaPC <- eigen(BD,symmetric=TRUE)$vec[,1]
+  autovmaxdeltaPC <- eigen(BD, symmetric=TRUE)$val[1]
+  vetordeltaPC <- eigen(BD, symmetric=TRUE)$vec[,1]
   dmaxG.alpha <- abs(vetordeltaPC)
   vCideltaPC <- 2*abs(diag(BD))
   Cb2 <- vCideltaPC
@@ -666,11 +699,13 @@ diag.IG <- function(model,mu.link = "log",sigma.link = "identity")
 #'@importFrom gamlss.dist dWEI3
 #'@export
 
-diag.WEI <- function(model,mu.link = "log",sigma.link = "identity")
-{
+diag.WEI <- function(model,
+                     mu.link = "log",
+                     sigma.link = "identity",
+                     scheme = "case.weight"){
 
   x <- model$mu.x
-  z  <- model$sigma.x
+  z <- model$sigma.x
   y <- model$y
   p <- ncol(x)
   q <- ncol(z)
@@ -717,16 +752,15 @@ diag.WEI <- function(model,mu.link = "log",sigma.link = "identity")
   Lbeta <- h0[1:p,1:p]
   b11 <- cbind(matrix(0, p, p), matrix(0, p, q))
   b12 <- cbind(matrix(0, q, p), solve(Ldelta))
-  B1 <- rbind(b11, b12)  #parameter beta
+  B1 <- rbind(b11, b12)
   b211 <- cbind(solve(Lbeta), matrix(0, p, q))
   b212 <- cbind(matrix(0, q, p), matrix(0, q, q))
-  B2 <- rbind(b211,b212)  # parameter delta
+  B2 <- rbind(b211,b212)
 
   b311 <- cbind(matrix(0, p, p), matrix(0, p, q))
   b312 <- cbind(matrix(0, q, p), matrix(0, q, q))
-  B3 <- rbind(b311,b312)  # parameter theta
+  B3 <- rbind(b311,b312)
 
-  ############################Case Weight####################################
 
   mu <- model$mu.fv
   sigma <- model$sigma.fv
@@ -744,26 +778,25 @@ diag.WEI <- function(model,mu.link = "log",sigma.link = "identity")
 
   Delta <- rbind(Deltamu,Deltasigma)
 
-  ##################theta#########################
-  BT <- B(Delta,solve(h0),B3)
-  autovmaxthetaPC <- eigen(BT,symmetric=TRUE)$val[1]
-  vetorpcthetaPC <- eigen(BT,symmetric=TRUE)$vec[,1]
+  BT <- B(Delta, solve(h0), B3)
+  autovmaxthetaPC <- eigen(BT,symmetric = TRUE)$val[1]
+  vetorpcthetaPC <-  eigen(BT,symmetric = TRUE)$vec[,1]
   dmaxG.theta <- abs(vetorpcthetaPC)
   vCithetaPC <- 2*abs(diag(BT))
   Cb0 <- vCithetaPC
   Cb.theta <- Cb0/sum(Cb0)
-  ######################betas########################
-  BM <- B(Delta,solve(h0),B1)
-  autovmaxbetaPC <- eigen(BM,symmetric=TRUE)$val[1]
-  vetorpcbetaPC <- eigen(BM,symmetric=TRUE)$vec[,1]
+
+  BM <- B(Delta, solve(h0), B1)
+  autovmaxbetaPC <- eigen(BM, symmetric = TRUE)$val[1]
+  vetorpcbetaPC <-  eigen(BM, symmetric = TRUE)$vec[,1]
   dmaxG.beta <- abs(vetorpcbetaPC)
   vCibetaPC <- 2*abs(diag(BM))
   Cb1 <- vCibetaPC
   Cb.beta <- Cb1/sum(Cb1)
-  ####################alphas#########################
+
   BD <- B(Delta,solve(h0),B2)
-  autovmaxdeltaPC <- eigen(BD,symmetric=TRUE)$val[1]
-  vetordeltaPC <- eigen(BD,symmetric=TRUE)$vec[,1]
+  autovmaxdeltaPC <- eigen(BD, symmetric = TRUE)$val[1]
+  vetordeltaPC <-    eigen(BD, symmetric = TRUE)$vec[,1]
   dmaxG.alpha <- abs(vetordeltaPC)
   vCideltaPC <- 2*abs(diag(BD))
   Cb2 <- vCideltaPC
@@ -783,6 +816,7 @@ diag.WEI <- function(model,mu.link = "log",sigma.link = "identity")
 #'@rdname diag.BP
 #'
 #'@export
+#'
 res_pearson <- function(model)
 {
 
@@ -817,18 +851,21 @@ res_pearson <- function(model)
 #' @param font the name of a font family for x and y axis.
 #'
 #'
-#'@return A simulated envelope of the class BP, GA, IG, RBS and WEI3.
+#'@return A simulated envelope.
 #'
 #'@author
-#'Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}
+#'Manoel Santos-Neto \email{manoel.ferreira at professor.ufcg.edu.br}
 #'
 #'@references
-#'Atkinson, A. C. (1985) Plots, transformations and regression : an introduction to graphical methods of diagnostic regression analysis. Oxford Science Publications, Oxford.
-#'Bourguignon, M., Santos-Neto, M. and Castro, M. (2018). A new regression model for positive data. arXiv.
-#'Leiva, V., Santos-Neto, M., Cysneiros, F.J.A, Barros, M. (2014)  Birnbaum-Saunders statistical modeling: a new approach. \emph{Statistical Modelling}, v. 14, p. 21-48, 2014.
+#'Atkinson, A.C. Plots, transformations and regression : an introduction to graphical methods of diagnostic regression analysis. Oxford: Oxford Science Publications, 1985.
 #'
-#'Santos-Neto, M., Cysneiros, F.J.A., Leiva, V., Barros, M. (2016) Reparameterized Birnbaum-Saunders
-#'regression models with varying precision. \emph{Electronic Journal of Statistics}, 10, 2825--2855. doi: \email{10.1214/16-EJS1187}.
+#'Bourguignon, M., Santos-Neto, M. and Castro, M. A new regression model for positive random variables with skewed and long tail. \emph{METRON}, v. 79, p. 33--55, 2021. \url{http://dx.doi.org/10.1007/s40300-021-00203-y}
+#'
+#'Leiva, V., Santos-Neto, M., Cysneiros, F.J.A, Barros, M. Birnbaum-Saunders statistical modeling: a new approach. \emph{Statistical Modelling}, v. 14, p. 21--48, 2014.
+#'\url{https://doi.org/10.1177/1471082X13494532}
+#'
+#'Santos-Neto, M., Cysneiros, F.J.A., Leiva, V., Barros, M. Reparameterized Birnbaum-Saunders
+#'regression models with varying precision. \emph{Electronic Journal of Statistics}, v. 10, p. 2825--2855, 2016. \url{https://doi.org/10.1214/16-EJS1187}.
 #'
 #'@importFrom graphics par points polygon
 #'@importFrom stats qqnorm rnorm
@@ -837,99 +874,16 @@ res_pearson <- function(model)
 #'@import dplyr
 #'@export
 
-envelope.BP <- function(model, k = 100, color = "grey50", xlabel = "Theorical Quantile", ylabel = "Empirical Quantile", font = "serif")
+envelope <- function(model,
+                          k = 100,
+                          color = "grey50",
+                          xlabel = "Theorical Quantile",
+                          ylabel = "Empirical Quantile",
+                          font="serif")
 {
 
   n <- model$N
-  td  <-  model$residuals
-  re <- base::matrix(0,n,k)
-
-  for(i in 1:k)
-  {
-    y1 <-rnorm(n)
-    re[,i] <- base::sort(y1)
-  }
-  e10 <- base::numeric(n)
-  e20 <- base::numeric(n)
-  e11 <- base::numeric(n)
-  e21 <- base::numeric(n)
-  e12 <- base::numeric(n)
-  e22 <- base::numeric(n)
-
-  for(l in 1:n)
-  {
-    eo <-  sort(re[l,])
-    e10[l] <- eo[base::ceiling(k*0.01)]
-    e20[l] <- eo[base::ceiling(k*(1 - 0.01))]
-    e11[l] <- eo[base::ceiling(k*0.05)]
-    e21[l] <- eo[base::ceiling(k*(1 - 0.05))]
-    e12[l] <- eo[base::ceiling(k*0.1)]
-    e22[l] <- eo[base::ceiling(k*(1 - 0.1))]
-  }
-
-  a <- qqnorm(e10, plot.it = FALSE)$x
-  r <- qqnorm(td, plot.it = FALSE)$x
-  xb <- base::apply(re, 1, mean)
-  rxb <- qqnorm(xb, plot.it = FALSE)$x
-
-  df <- base::data.frame(r=r,xab=a,emin=base::cbind(e10,e11,e12),emax=base::cbind(e20,e21,e22),xb=xb,td=td,rxb=rxb)
-  df %>% ggplot(aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) + theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank())+theme(text=element_text(size=10,family=font))
-}
-
-#'@rdname envelope
-#'
-#'@importFrom ggplot2 ggplot
-#'@importFrom stats rnorm
-#'
-#'@export
-envelope.GA <- function(model,k=100,color = "grey50", xlabel = "Theorical Quantile",ylabel = "Empirical Quantile",font="serif")
-{
-
-  n=model$N
-  td  = model$residuals
-  re <- matrix(0,n,k)
-
-  for(i in 1:k)
-  {
-    y1 <- rnorm(n)
-    re[, i] = sort(y1)
-  }
-  e10 <- numeric(n)
-  e20 <- numeric(n)
-  e11 <- numeric(n)
-  e21 <- numeric(n)
-  e12 <- numeric(n)
-  e22 <- numeric(n)
-
-  for(l in 1:n)
-  {
-    eo = sort(re[l,])
-    e10[l] = eo[ceiling(k*0.01)]
-    e20[l] = eo[ceiling(k*(1 - 0.01))]
-    e11[l] = eo[ceiling(k*0.05)]
-    e21[l] = eo[ceiling(k*(1 - 0.05))]
-    e12[l] = eo[ceiling(k*0.1)]
-    e22[l] = eo[ceiling(k*(1 - 0.1))]
-  }
-
-  a <- qqnorm(e10, plot.it = FALSE)$x
-  r <- qqnorm(td, plot.it = FALSE)$x
-  xb = apply(re, 1, mean)
-  rxb <- qqnorm(xb, plot.it = FALSE)$x
-
-  df <- data.frame(r=r,xab=a,emin=cbind(e10,e11,e12),emax=cbind(e20,e21,e22),xb=xb,td=td,rxb=rxb)
-  ggplot(df,aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) +theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank())  +theme(text=element_text(size=10,family=font))
-}
-
-#'@rdname envelope
-#'@importFrom ggplot2 ggplot
-#'@importFrom stats rnorm
-#'@export
-envelope.IG <- function(model,k=100,color = "grey50", xlabel = "Theorical Quantile",ylabel = "Empirical Quantile",font="serif")
-{
-
-  n=model$N
-  td  = model$residuals
+  td  <- model$residuals
   re <- matrix(0,n,k)
 
   for(i in 1:k)
@@ -946,105 +900,54 @@ envelope.IG <- function(model,k=100,color = "grey50", xlabel = "Theorical Quanti
 
   for(l in 1:n)
   {
-    eo = sort(re[l,])
-    e10[l] = eo[ceiling(k*0.01)]
-    e20[l] = eo[ceiling(k*(1 - 0.01))]
-    e11[l] = eo[ceiling(k*0.05)]
-    e21[l] = eo[ceiling(k*(1 - 0.05))]
-    e12[l] = eo[ceiling(k*0.1)]
-    e22[l] = eo[ceiling(k*(1 - 0.1))]
+    eo <- sort(re[l,])
+    e10[l] <- eo[ceiling(k*0.01)]
+    e20[l] <- eo[ceiling(k*(1 - 0.01))]
+    e11[l] <- eo[ceiling(k*0.05)]
+    e21[l] <- eo[ceiling(k*(1 - 0.05))]
+    e12[l] <- eo[ceiling(k*0.1)]
+    e22[l] <- eo[ceiling(k*(1 - 0.1))]
   }
 
   a <- qqnorm(e10, plot.it = FALSE)$x
   r <- qqnorm(td, plot.it = FALSE)$x
-  xb = apply(re, 1, mean)
+  xb <- apply(re, 1, mean)
   rxb <- qqnorm(xb, plot.it = FALSE)$x
 
-  df <- data.frame(r=r,xab=a,emin=cbind(e10,e11,e12),emax=cbind(e20,e21,e22),xb=xb,td=td,rxb=rxb)
-  ggplot(df,aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) +theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank()) +theme(text=element_text(size=10,family=font))
+  df <- data.frame(r = r,
+                   xab = a,
+                   emin = cbind(e10,e11,e12),
+                   emax = cbind(e20,e21,e22),
+                   xb = xb,
+                   td = td,
+                   rxb = rxb)
+    ggplot(df,aes(r,td)) +
+    geom_ribbon(aes(x = xab, ymin = emin.e10, ymax = emax.e20),fill = color,alpha = 0.5) +
+    geom_ribbon(aes(x = xab, ymin = emin.e11, ymax = emax.e21),fill = color,alpha = 0.5) +
+    geom_ribbon(aes(x = xab, ymin = emin.e12, ymax = emax.e22),fill = color,alpha = 0.5) +
+      scale_fill_gradient(low = "grey25", high = "grey75") +
+      geom_point() +
+      geom_line(aes(rxb,xb),lty = 2) +
+      xlab(xlabel) +
+      ylab(ylabel) +
+      theme_bw() +
+      theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank()) +
+      theme(text = element_text(size = 10,family = font))
 }
 
-#'@rdname envelope
-#'@importFrom ggplot2 ggplot
-#'@importFrom stats rnorm
+
+#'@rdname envelope.GA
 #'@export
-envelope.RBS <- function(model,k=100,color = "grey50", xlabel = "Theorical Quantile",ylabel = "Empirical Quantile",font="serif")
-{
-  n <- model$N
-  td  <-  model$residuals
-  re <- matrix(0,n,k)
 
-  for(i in 1:k)
-  {
-    y1 <- rnorm(n)
-    re[,i] <- sort(y1)
-  }
-  e10 <- numeric(n)
-  e20 <- numeric(n)
-  e11 <- numeric(n)
-  e21 <- numeric(n)
-  e12 <- numeric(n)
-  e22 <- numeric(n)
 
-  for(l in 1:n)
-  {
-    eo = sort(re[l,])
-    e10[l] = eo[ceiling(k*0.01)]
-    e20[l] = eo[ceiling(k*(1 - 0.01))]
-    e11[l] = eo[ceiling(k*0.05)]
-    e21[l] = eo[ceiling(k*(1 - 0.05))]
-    e12[l] = eo[ceiling(k*0.1)]
-    e22[l] = eo[ceiling(k*(1 - 0.1))]
-  }
-
-  a <- qqnorm(e10, plot.it = FALSE)$x
-  r <- qqnorm(td, plot.it = FALSE)$x
-  xb = apply(re, 1, mean)
-  rxb <- qqnorm(xb, plot.it = FALSE)$x
-
-  df <- data.frame(r=r,xab=a,emin=cbind(e10,e11,e12),emax=cbind(e20,e21,e22),xb=xb,td=td,rxb=rxb)
-  ggplot(df,aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) +theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank())+theme(text=element_text(size=10,family=font))
-}
-
-#'@rdname envelope
-#'@importFrom ggplot2 ggplot
-#'@importFrom stats rnorm
+#'@rdname envelope.IG
 #'@export
-envelope.WEI3 <- function(model,k=100,color = "grey50", xlabel = "Theorical Quantile",ylabel = "Empirical Quantile",font="serif")
-{
 
-  n=model$N
-  td  = model$residuals
-  re <- matrix(0,n,k)
+#'@rdname envelope.BP
+#'@export
 
-  for(i in 1:k)
-  {
-    y1 <- rnorm(n)
-    re[,i] <- sort(y1)
-  }
-  e10 <- numeric(n)
-  e20 <- numeric(n)
-  e11 <- numeric(n)
-  e21 <- numeric(n)
-  e12 <- numeric(n)
-  e22 <- numeric(n)
+#'@rdname envelope.RBS
+#'@export
 
-  for(l in 1:n)
-  {
-    eo = sort(re[l,])
-    e10[l] = eo[ceiling(k*0.01)]
-    e20[l] = eo[ceiling(k*(1 - 0.01))]
-    e11[l] = eo[ceiling(k*0.05)]
-    e21[l] = eo[ceiling(k*(1 - 0.05))]
-    e12[l] = eo[ceiling(k*0.1)]
-    e22[l] = eo[ceiling(k*(1 - 0.1))]
-  }
-
-  a <- qqnorm(e10, plot.it = FALSE)$x
-  r <- qqnorm(td, plot.it = FALSE)$x
-  xb = apply(re, 1, mean)
-  rxb <- qqnorm(xb, plot.it = FALSE)$x
-
-  df <- data.frame(r=r,xab=a,emin=cbind(e10,e11,e12),emax=cbind(e20,e21,e22),xb=xb,td=td,rxb=rxb)
-  ggplot(df,aes(r,td))+geom_ribbon(aes(x=xab, ymin=emin.e10, ymax=emax.e20),fill=color,alpha=0.5)  + geom_ribbon(aes(x=xab, ymin=emin.e11, ymax=emax.e21),fill=color,alpha=0.5) + geom_ribbon(aes(x=xab, ymin=emin.e12, ymax=emax.e22),fill=color,alpha=0.5) +scale_fill_gradient(low = "grey25", high = "grey75")+ geom_point() + geom_line(aes(rxb,xb),lty=2)+xlab(xlabel)+ylab(ylabel) +theme_bw()+ theme(panel.grid.major=element_blank(),panel.grid.minor =element_blank()) +theme(text=element_text(size=10,family=font))
-}
+#'@rdname envelope.WEI3
+#'@export

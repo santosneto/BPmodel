@@ -17,7 +17,7 @@ dBP(x, mu = 1, sigma = 1, log = FALSE)
 
 pBP(q, mu = 1, sigma = 1, lower.tail = TRUE, log.p = FALSE)
 
-rBP(n, mu = 1, sigma = 1)
+rBP(n = 1, mu = 1, sigma = 1)
 
 qBP(p, mu = 1, sigma = 1, lower.tail = TRUE, log.p = FALSE)
 }
@@ -26,17 +26,17 @@ qBP(p, mu = 1, sigma = 1, lower.tail = TRUE, log.p = FALSE)
 
 \item{sigma.link}{type of residual to be used.}
 
-\item{x, q}{vector of quantiles}
+\item{x, q}{vector of quantiles.}
 
-\item{mu}{vector of scale parameter values}
+\item{mu}{vector of scale parameter values.}
 
-\item{sigma}{vector of shape parameter values}
+\item{sigma}{vector of shape parameter values.}
 
-\item{log, }{logical; if TRUE, quantiles are given as log.}
+\item{log}{logical; if TRUE, quantiles are given as log.}
 
-\item{lower.tail}{logical; if TRUE (default), probabilities are P[X <= x], otherwise, P[X > x]}
+\item{lower.tail}{logical; if TRUE (default), probabilities are P[X <= x], otherwise, P[X > x].}
 
-\item{log.p, }{log.p logical; if TRUE, probabilities p are given as log(p).}
+\item{log.p}{log.p logical; if TRUE, probabilities p are given as log(p).}
 
 \item{n}{number of observations. If \code{length(n) > 1}, the length is taken to be the number required.}
 
@@ -56,9 +56,19 @@ generation for the \code{BP} parameterization of the BP distribution.
 \note{
 For the function BP(), mu is the mean and sigma is the precision parameter of the BP distribution.
 }
+\examples{
+y <- rBP(n = 100)
+hist(y)
+plot(function(x) dBP(x), 0.0001, 8)
+gamlss::gamlss(y~1, family = BP)
+}
 \references{
-Bourguignon, M., Santos-Neto, M. and Castro, M. (2018). A new regression model for positive data. arXiv.
+Rigby, R.A., Stasinopoulos, D.M., Heller, G.Z., and De Bastiani, F. Distributions for modeling location, scale, and shape: Using GAMLSS in R, London: Chapman and Hall/CRC, 2019.
+
+Stasinopoulos D.M., Rigby R.A., Heller G., Voudouris V., and De Bastiani F. Flexible Regression and Smoothing: Using GAMLSS in R, London: Chapman and Hall/CRC, 2017
+
+Bourguignon, M., Santos-Neto, M. and Castro, M. A new regression model for positive random variables with skewed and long tail. \emph{METRON}, v. 79, p. 33--55, 2021. \url{http://dx.doi.org/10.1007/s40300-021-00203-y}
 }
 \author{
-Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}.
+Manoel Santos-Neto \email{manoel.ferreira at professor.ufcg.edu.br}
 }

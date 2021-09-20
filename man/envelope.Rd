@@ -9,43 +9,7 @@
 \alias{envelope.WEI3}
 \title{Envelopes}
 \usage{
-envelope.BP(
-  model,
-  k = 100,
-  color = "grey50",
-  xlabel = "Theorical Quantile",
-  ylabel = "Empirical Quantile",
-  font = "serif"
-)
-
-envelope.GA(
-  model,
-  k = 100,
-  color = "grey50",
-  xlabel = "Theorical Quantile",
-  ylabel = "Empirical Quantile",
-  font = "serif"
-)
-
-envelope.IG(
-  model,
-  k = 100,
-  color = "grey50",
-  xlabel = "Theorical Quantile",
-  ylabel = "Empirical Quantile",
-  font = "serif"
-)
-
-envelope.RBS(
-  model,
-  k = 100,
-  color = "grey50",
-  xlabel = "Theorical Quantile",
-  ylabel = "Empirical Quantile",
-  font = "serif"
-)
-
-envelope.WEI3(
+envelope(
   model,
   k = 100,
   color = "grey50",
@@ -68,19 +32,22 @@ envelope.WEI3(
 \item{font}{the name of a font family for x and y axis.}
 }
 \value{
-A simulated envelope of the class BP, GA, IG, RBS and WEI3.
+A simulated envelope.
 }
 \description{
 Computes simulation envelopes.
 }
 \references{
-Atkinson, A. C. (1985) Plots, transformations and regression : an introduction to graphical methods of diagnostic regression analysis. Oxford Science Publications, Oxford.
-Bourguignon, M., Santos-Neto, M. and Castro, M. (2018). A new regression model for positive data. arXiv.
-Leiva, V., Santos-Neto, M., Cysneiros, F.J.A, Barros, M. (2014)  Birnbaum-Saunders statistical modeling: a new approach. \emph{Statistical Modelling}, v. 14, p. 21-48, 2014.
+Atkinson, A.C. Plots, transformations and regression : an introduction to graphical methods of diagnostic regression analysis. Oxford: Oxford Science Publications, 1985.
 
-Santos-Neto, M., Cysneiros, F.J.A., Leiva, V., Barros, M. (2016) Reparameterized Birnbaum-Saunders
-regression models with varying precision. \emph{Electronic Journal of Statistics}, 10, 2825--2855. doi: \email{10.1214/16-EJS1187}.
+Bourguignon, M., Santos-Neto, M. and Castro, M. A new regression model for positive random variables with skewed and long tail. \emph{METRON}, v. 79, p. 33--55, 2021. \url{http://dx.doi.org/10.1007/s40300-021-00203-y}
+
+Leiva, V., Santos-Neto, M., Cysneiros, F.J.A, Barros, M. Birnbaum-Saunders statistical modeling: a new approach. \emph{Statistical Modelling}, v. 14, p. 21--48, 2014.
+\url{https://doi.org/10.1177/1471082X13494532}
+
+Santos-Neto, M., Cysneiros, F.J.A., Leiva, V., Barros, M. Reparameterized Birnbaum-Saunders
+regression models with varying precision. \emph{Electronic Journal of Statistics}, v. 10, p. 2825--2855, 2016. \url{https://doi.org/10.1214/16-EJS1187}.
 }
 \author{
-Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}
+Manoel Santos-Neto \email{manoel.ferreira at professor.ufcg.edu.br}
 }

@@ -247,11 +247,26 @@ grad_test_wei <- function(modelh0, modelh1)
 }
 
 #'@rdname test
+#'@param x vector of quantiles.
+#'@param mu,sigma the (positive) location and precision parameter.
+#'@param log logical; The logarithm of the density is returned if the value is TRUE.
 #'
 #'@importFrom stats pchisq
-#'@importFrom RBS dRBS
-
 #'@export
+
+dRBS <-function(x,
+                mu = 1.0,
+                sigma = 1.0,
+                log = FALSE)
+{
+  if (any(mu < 0))  stop(paste("mu must be positive", "\n", ""))
+  if (any(sigma < 0))  stop(paste("sigma must be positive", "\n", ""))
+  if (any(x <= 0))  stop(paste("x must be positive", "\n", ""))
+  log.lik =  0.5*(sigma - log(mu) + log(sigma+1) - log(16*pi)) - (3/2)*log(x) - ((sigma+1)/(4*mu))*x - ((mu*sigma*sigma)/(4*(sigma+1)))*(1/x)  + log(x + ((mu*sigma)/(sigma+1)))
+  if(log==FALSE) fy  <- exp(log.lik) else fy <- log.lik
+  fy
+}
+
 
 grad_test_rbs <- function(modelh0, modelh1)
 {
