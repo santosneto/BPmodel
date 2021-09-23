@@ -1,7 +1,7 @@
 Type: Package
 Package: BPmodel
 Title: Beta-Prime Regression Model
-Version: 1.1.1
+Version: 1.1.2
 Authors@R: 
     c(person(given = "Manoel",
              family = "Santos-Neto",
@@ -22,24 +22,22 @@ Authors@R:
 Author: Manoel Santos-Neto [aut, cre], Marcelo Bourguignon [aut], Mário de
     Castro [aut], Tales Ribeiro-Bezerra [aut]
 Maintainer: Manoel Santos-Neto <manoel.ferreira@professor.ufcg.edu.br>
-Description: Beta-Prime regression for modeling beta-prime-distributed
-    dependent variables.
+Description: A new regression model for positive random variables with skewed 
+    and long tail.
 License: GPL-3
 URL: https://github.com/santosneto/BPmodel
 BugReports: https://github.com/santosneto/BPmodel/issues
-Depends: 
-    Deriv,
-    dplyr,
-    graphics,
-    pracma,
-    R (>= 3.1.2),
-    stats
+Depends: R (>= 3.1.2)
 Imports: 
     base,
     extraDistr,
     gamlss,
     gamlss.dist,
-    ggplot2
+    ggplot2,
+    Deriv,
+    dplyr,
+    graphics,
+    pracma
 Suggests: 
     testthat
 Encoding: UTF-8

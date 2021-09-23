@@ -15,9 +15,9 @@
 #' parameter distribution, for a gamlss.family object to be used in GAMLSS
 #' fitting using using the function \code{gamlss()}, with mean equal to the
 #' parameter \code{mu} and \code{sigma} equal the precision parameter. The
-#' functions \code{dBP}, \code{pBP}, \code{qBP} and \code{rBP} define the density
-#' , distribution function, quantile function and random generation for the
-#' \code{BP} parameterization of the BP distribution.
+#' functions \code{dBP}, \code{pBP}, \code{qBP} and \code{rBP} define the
+#' density, distribution function, quantile function and random generation
+#' for the \code{BP} parameterization of the BP distribution.
 #'
 #' @usage BP(mu.link = "log", sigma.link = "log")
 #'
@@ -71,8 +71,11 @@
 #' @export
 
 BP <- function(mu.link = "log", sigma.link = "log") {
-  mstats <- checklink("mu.link", "Beta Prime", substitute(mu.link), c("log", "identity", "sqrt", "own"))
-  dstats <- checklink("sigma.link", "Beta Prime", substitute(sigma.link), c("log", "identity", "sqrt", "own"))
+  mstats <- checklink("mu.link", "Beta Prime", substitute(mu.link),
+                      c("log", "identity", "sqrt", "own"))
+  dstats <- checklink("sigma.link", "Beta Prime",
+                      substitute(sigma.link),
+                      c("log", "identity", "sqrt", "own"))
 
   structure(
     list(
@@ -122,7 +125,8 @@ BP <- function(mu.link = "log", sigma.link = "log") {
         a <- mu * (1 + sigma)
         b <- mu * (1 + sigma) + sigma + 2
 
-        d2ldd2 <- -(mu^2) * trigamma(a) + ((1 + mu)^2) * trigamma(b) - trigamma(Phi + 1)
+        d2ldd2 <- -(mu^2) * trigamma(a) + ((1 + mu)^2) * trigamma(b) -
+          trigamma(Phi + 1)
 
         d2ldd2
       },
@@ -139,7 +143,8 @@ BP <- function(mu.link = "log", sigma.link = "log") {
       G.dev.incr = function(y, mu, sigma, ...) {
         -2 * dBP(y, mu, sigma, log = TRUE)
       },
-      rqres = expression(rqres(pfun = "pBP", type = "Continuous", y = y, mu = mu, sigma = sigma)),
+      rqres = expression(rqres(pfun = "pBP", type = "Continuous", y = y,
+                               mu = mu, sigma = sigma)),
       mu.initial = expression({
         mu <- y + mean(y) / 2
       }),
@@ -265,7 +270,8 @@ qBP <- function(p,
   a <- mu * (1 + sigma)
   b <- 2 + sigma
 
-  q <- extraDistr::qbetapr(p, shape1 = a, shape2 = b, scale = 1, lower.tail = lower.tail, log.p = log.p)
+  q <- extraDistr::qbetapr(p, shape1 = a, shape2 = b, scale = 1,
+                           lower.tail = lower.tail, log.p = log.p)
 
   q
 }
@@ -555,7 +561,8 @@ diag.GA <- function(model,
 
   tau <- sigma_linkfun(sigma)
   bi <- sigma_mu.eta(tau)
-  dldd <- (2 / sigma^3) * ((y / mu) - log(y) + log(mu) + log(sigma^2) - 1 + digamma(1 / (sigma^2)))
+  dldd <- (2 / sigma^3) * ((y / mu) - log(y) + log(mu) + log(sigma^2) - 1 +
+                             digamma(1 / (sigma^2)))
 
   Deltasigma <- crossprod(z, diag(bi * dldd))
 
@@ -788,7 +795,11 @@ diag.WEI <- function(model,
 
   tau <- sigma_linkfun(sigma)
   bi <- sigma_mu.eta(tau)
-  dldd <- 1 / sigma - log(y * gamma((1 / sigma) + 1) / mu) * ((y * gamma((1 / sigma) + 1) / mu)^sigma - 1) + (digamma((1 / sigma) + 1)) * ((y * gamma((1 / sigma) + 1) / mu)^sigma - 1) / sigma
+  dldd <- 1 / sigma -
+log(y * gamma((1 / sigma) + 1) / mu) *
+    ((y * gamma((1 / sigma) + 1) / mu)^sigma - 1) +
+(digamma((1 / sigma) + 1)) *
+    ((y * gamma((1 / sigma) + 1) / mu)^sigma - 1) / sigma
 
   Deltasigma <- crossprod(z, diag(bi * dldd))
 
@@ -945,16 +956,20 @@ envelope <- function(model,
     rxb = rxb
   )
   ggplot(df, aes(r, td)) +
-    geom_ribbon(aes(x = xab, ymin = emin.e10, ymax = emax.e20), fill = color, alpha = 0.5) +
-    geom_ribbon(aes(x = xab, ymin = emin.e11, ymax = emax.e21), fill = color, alpha = 0.5) +
-    geom_ribbon(aes(x = xab, ymin = emin.e12, ymax = emax.e22), fill = color, alpha = 0.5) +
+    geom_ribbon(aes(x = xab, ymin = emin.e10, ymax = emax.e20), fill = color,
+                alpha = 0.5) +
+    geom_ribbon(aes(x = xab, ymin = emin.e11, ymax = emax.e21), fill = color,
+                alpha = 0.5) +
+    geom_ribbon(aes(x = xab, ymin = emin.e12, ymax = emax.e22), fill = color,
+                alpha = 0.5) +
     scale_fill_gradient(low = "grey25", high = "grey75") +
     geom_point() +
     geom_line(aes(rxb, xb), lty = 2) +
     xlab(xlabel) +
     ylab(ylabel) +
     theme_bw() +
-    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank()) +
     theme(text = element_text(size = 10, family = font))
 }
 
