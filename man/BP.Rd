@@ -48,16 +48,14 @@ to be the number required.}
 }
 \value{
 returns a \code{gamlss.family} object which can be used to fit a BP
-distribution in the \code{gamlss()} function.
+distribution in the \link[gamlss]{gamlss} function.
 }
 \description{
-The function \code{BP()} defines the BP distribution, a two
-parameter distribution, for a gamlss.family object to be used in GAMLSS
-fitting using using the function \code{gamlss()}, with mean equal to the
-parameter \code{mu} and \code{sigma} equal the precision parameter. The
+The function \code{BP()} defines the Reparameterized BP distribution
+for a gamlss.family object to be used in \link[gamlss]{gamlss}. The
 functions \code{dBP}, \code{pBP}, \code{qBP} and \code{rBP} define the
 density, distribution function, quantile function and random generation
-for the \code{BP} parameterization of the BP distribution.
+of the BP distribution.
 }
 \note{
 For the function BP(), mu is the mean and sigma is the precision
@@ -84,5 +82,5 @@ positive random variables with skewed and long tail. \emph{METRON}, v. 79, p.
 33--55, 2021. \doi{10.1007/s40300-021-00203-y}
 }
 \author{
-Manoel Santos-Neto \email{manoel.ferreira at professor.ufcg.edu.br}
+Manoel Santos-Neto \email{manoel.ferreira@professor.ufcg.edu.br}
 }

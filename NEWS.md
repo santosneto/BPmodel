@@ -1,3 +1,7 @@
-# BPmodel 1.1.1
+# BPmodel 1.1.2
 
-* Added a `NEWS.md` file to track changes to the package.
+  * This version is the released version of BPmodel. 
+
+#BPmodel 1.1.4
+ 
+* Fixed the documentation

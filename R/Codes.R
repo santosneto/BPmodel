@@ -11,13 +11,11 @@
 #'
 #' @title Reparameterized Beta Prime (BP) distribution for fitting a GAMLSS
 #'
-#' @description The function \code{BP()} defines the BP distribution, a two
-#' parameter distribution, for a gamlss.family object to be used in GAMLSS
-#' fitting using using the function \code{gamlss()}, with mean equal to the
-#' parameter \code{mu} and \code{sigma} equal the precision parameter. The
+#' @description The function \code{BP()} defines the Reparameterized BP distribution
+#'for a gamlss.family object to be used in \link[gamlss]{gamlss}. The
 #' functions \code{dBP}, \code{pBP}, \code{qBP} and \code{rBP} define the
 #' density, distribution function, quantile function and random generation
-#' for the \code{BP} parameterization of the BP distribution.
+#' of the BP distribution.
 #'
 #'
 #' @param mu.link  Defines the mu.link, with "log" link as the default for
@@ -37,14 +35,14 @@
 #'
 #'
 #' @return returns a \code{gamlss.family} object which can be used to fit a BP
-#' distribution in the \code{gamlss()} function.
+#' distribution in the \link[gamlss]{gamlss} function.
 #'
 #' @note For the function BP(), mu is the mean and sigma is the precision
 #' parameter of the BP distribution.
 #'
 #'
 #' @author
-#' Manoel Santos-Neto \email{manoel.ferreira at professor.ufcg.edu.br}
+#' Manoel Santos-Neto \email{manoel.ferreira@professor.ufcg.edu.br}
 #'
 #' @references
 #'
