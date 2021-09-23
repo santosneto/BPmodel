@@ -22,19 +22,21 @@ Authors@R:
 Author: Manoel Santos-Neto [aut, cre], Marcelo Bourguignon [aut], Mário de
     Castro [aut], Tales Ribeiro-Bezerra [aut]
 Maintainer: Manoel Santos-Neto <manoel.ferreira@professor.ufcg.edu.br>
-Description: A new regression model for positive random variables with skewed and long tail.
+Description: A new regression model for positive random variables with
+    skewed and long tail.
 License: GPL-3
 URL: https://github.com/santosneto/BPmodel
 BugReports: https://github.com/santosneto/BPmodel/issues
-Depends: R (>= 3.1.2)
+Depends: 
+    R (>= 3.1.2)
 Imports: 
     base,
+    Deriv,
+    dplyr,
     extraDistr,
     gamlss,
     gamlss.dist,
     ggplot2,
-    Deriv,
-    dplyr,
     graphics,
     pracma
 Suggests: 
