@@ -6,18 +6,11 @@
 \alias{grad_test_ga}
 \alias{grad_test_ig}
 \alias{grad_test_wei}
-\alias{grad_test_rbs}
-\alias{wald_test_bp}
-\alias{wald_test_ga}
-\alias{wald_test_ig}
-\alias{wald_test_wei}
+\alias{wald_test}
 \alias{score_test_bp}
 \alias{score_test_ga}
 \alias{score_test_ig}
 \alias{score_test_wei}
-\alias{score_test_rbs}
-\alias{dRBS}
-\alias{wald_test}
 \title{Precision test}
 \usage{
 grad_test_bp(modelh0,modelh1)
@@ -28,11 +21,7 @@ grad_test_ig(modelh0, modelh1)
 
 grad_test_wei(modelh0, modelh1)
 
-dRBS(x, mu = 1, sigma = 1, log = FALSE)
-
 score_test_bp(modelh0, modelh1)
-
-score_test_rbs(modelh0, modelh1)
 
 score_test_ga(modelh0, modelh1)
 
@@ -46,13 +35,6 @@ wald_test(modelh1)
 \item{modelh0}{model under null hypothesis.}
 
 \item{modelh1}{model under alternative hypothesis.}
-
-\item{x}{vector of quantiles.}
-
-\item{mu, sigma}{the (positive) location and precision parameter.}
-
-\item{log}{logical; The logarithm of the density is returned if the value is
-TRUE.}
 }
 \value{
 A list with class "htest" containing the following components:
@@ -66,12 +48,11 @@ A list with class "htest" containing the following components:
 \code{method}	a character string indicating what type of likelihood
 ratio test was performed.
 
-\code{data.name} a character string giving the name(s) of the data
+\code{data.name} a character string giving the name(s) of the data.
 }
 \description{
-Tests the null hypothesis of precision fixed in RBS models
-against the alternative of precision variable.
+Tests the null hypothesis of precision fixed in GA, IG, WEI and BP regression models against the alternative of precision variable.
 }
 \author{
-Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}
+Manoel Santos-Neto \email{manoel.ferreira@professor.ufcg.edu.br}
 }

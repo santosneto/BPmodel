@@ -19,11 +19,11 @@
 #' density, distribution function, quantile function and random generation
 #' for the \code{BP} parameterization of the BP distribution.
 #'
-#' @usage BP(mu.link = "log", sigma.link = "log")
 #'
-#' @param mu.link object for which the extraction of model residuals is
-#' meaningful.
-#' @param sigma.link type of residual to be used.
+#' @param mu.link  Defines the mu.link, with "log" link as the default for
+#' the mu parameter.
+#' @param sigma.link Defines the sigma.link, with "log" link as the default
+#' for the sigma parameter.
 #' @param x,q vector of quantiles.
 #' @param mu vector of scale parameter values.
 #' @param sigma vector of shape parameter values.
@@ -58,7 +58,7 @@
 #'
 #' Bourguignon, M., Santos-Neto, M. and Castro, M. A new regression model for
 #' positive random variables with skewed and long tail. \emph{METRON}, v. 79, p.
-#' 33--55, 2021. \doi{http://dx.doi.org/10.1007/s40300-021-00203-y}
+#' 33--55, 2021. \doi{10.1007/s40300-021-00203-y}
 #'
 #'
 #' @examples
@@ -66,6 +66,7 @@
 #' hist(y)
 #' plot(function(x) dBP(x), 0.0001, 8)
 #' gamlss::gamlss(y ~ 1, family = BP)
+#'
 #' @importFrom gamlss.dist checklink
 #'
 #' @export
@@ -182,10 +183,10 @@ dBP <- function(x,
   b <- 2 + sigma
 
   fy <- extraDistr::dbetapr(x,
-    shape1 = a,
-    shape2 = b,
-    scale = 1.0,
-    log = log
+                            shape1 = a,
+                            shape2 = b,
+                            scale = 1.0,
+                            log = log
   )
   fy
 }
@@ -213,8 +214,8 @@ pBP <- function(q,
   b <- 2 + sigma
 
   cdf <- extraDistr::pbetapr(q,
-    shape1 = a, shape2 = b, scale = 1, lower.tail = lower.tail,
-    log.p = log.p
+                             shape1 = a, shape2 = b, scale = 1, lower.tail = lower.tail,
+                             log.p = log.p
   )
   cdf
 }
@@ -285,12 +286,12 @@ qBP <- function(p,
 #' @aliases diag.WEI
 #' @aliases res_pearson
 #'
-#' @title Diagnostic Analysis - Local Influence
+#' @title Diagnostic Analysis - Local Influence.
 #'
 #' @description Diagnostics for the BP, GA, IG and WEI regression models
 #'
 #' @param model Object of class \code{gamlss} holding the fitted model.
-#' @param mu.link  Defines the mu.link, with "identity" link as the default for
+#' @param mu.link  Defines the mu.link, with "log" link as the default for
 #' the mu parameter.
 #' @param sigma.link Defines the sigma.link, with "identity" link as the default
 #' for the sigma parameter.
@@ -299,12 +300,12 @@ qBP <- function(p,
 #' @return Local influence measures.
 #'
 #' @author
-#' Manoel Santos-Neto \email{manoel.ferreira at professor.ufcg.edu.br}
+#' Manoel Santos-Neto \email{manoel.ferreira@professor.ufcg.edu.br}
 #'
 #' @references
 #' Bourguignon, M., Santos-Neto, M. and Castro, M. A new regression model for
 #' positive random variables with skewed and long tail. \emph{METRON},
-#' v. 79, p. 33--55, 2021. \doi{http://dx.doi.org/10.1007/s40300-021-00203-y}
+#' v. 79, p. 33--55, 2021. \doi{10.1007/s40300-021-00203-y}
 #'
 #' @importFrom pracma hessian ones
 #' @importFrom stats make.link sd
@@ -312,7 +313,7 @@ qBP <- function(p,
 
 diag.BP <- function(model,
                     mu.link = "log",
-                    sigma.link = "log",
+                    sigma.link = "identity",
                     scheme = "case.weight") {
   x <- model$mu.x
   z <- model$sigma.x
@@ -796,9 +797,9 @@ diag.WEI <- function(model,
   tau <- sigma_linkfun(sigma)
   bi <- sigma_mu.eta(tau)
   dldd <- 1 / sigma -
-log(y * gamma((1 / sigma) + 1) / mu) *
+    log(y * gamma((1 / sigma) + 1) / mu) *
     ((y * gamma((1 / sigma) + 1) / mu)^sigma - 1) +
-(digamma((1 / sigma) + 1)) *
+    (digamma((1 / sigma) + 1)) *
     ((y * gamma((1 / sigma) + 1) / mu)^sigma - 1) / sigma
 
   Deltasigma <- crossprod(z, diag(bi * dldd))
@@ -840,29 +841,10 @@ log(y * gamma((1 / sigma) + 1) / mu) *
   return(result)
 }
 
-#' @rdname diag.BP
-#'
-#' @export
-#'
-res_pearson <- function(model) {
-  mu <- fit$mu.fv
-  phi <- fit$sigma.fv
-  y <- model$y
-
-  resP <- (sqrt(phi) * (y - mu)) / sqrt(mu * (1 + mu))
-
-
-  resP
-}
-
 
 #' @name envelope
 #'
-#' @aliases envelope.BP
-#' @aliases envelope.GA
-#' @aliases envelope.IG
-#' @aliases envelope.RBS
-#' @aliases envelope.WEI3
+#'@aliases envelope
 #'
 #' @title Envelopes
 #'
@@ -879,7 +861,7 @@ res_pearson <- function(model) {
 #' @return A simulated envelope.
 #'
 #' @author
-#' Manoel Santos-Neto \email{manoel.ferreira at professor.ufcg.edu.br}
+#' Manoel Santos-Neto \email{manoel.ferreira@professor.ufcg.edu.br}
 #'
 #' @references
 #' Atkinson, A.C. Plots, transformations and regression : an introduction to
@@ -888,18 +870,18 @@ res_pearson <- function(model) {
 #'
 #' Bourguignon, M., Santos-Neto, M. and Castro, M. A new regression model for
 #' positive random variables with skewed and long tail. \emph{METRON}, v. 79,
-#' p. 33--55, 2021. \doi{http://dx.doi.org/10.1007/s40300-021-00203-y}
+#' p. 33--55, 2021. \doi{10.1007/s40300-021-00203-y}
 #'
 #' Leiva, V., Santos-Neto, M., Cysneiros, F.J.A, Barros, M. Birnbaum-Saunders
 #' statistical modeling: a new approach. \emph{Statistical Modelling},
 #' v. 14, p. 21--48, 2014.
-#' \doi{https://doi.org/10.1177/1471082X13494532}
+#' \doi{10.1177/1471082X13494532}
 #'
 #' Santos-Neto, M., Cysneiros, F.J.A., Leiva, V., Barros, M. Reparameterized
 #' Birnbaum-Saunders
 #' regression models with varying precision.
 #' \emph{Electronic Journal of Statistics}, v. 10, p. 2825--2855, 2016.
-#' \doi{https://doi.org/10.1214/16-EJS1187}.
+#' \doi{10.1214/16-EJS1187}.
 #'
 #' @importFrom graphics par points polygon
 #' @importFrom stats qqnorm rnorm
@@ -973,19 +955,3 @@ envelope <- function(model,
     theme(text = element_text(size = 10, family = font))
 }
 
-
-#' @rdname envelope.GA
-#' @export
-
-
-#' @rdname envelope.IG
-#' @export
-
-#' @rdname envelope.BP
-#' @export
-
-#' @rdname envelope.RBS
-#' @export
-
-#' @rdname envelope.WEI3
-#' @export
