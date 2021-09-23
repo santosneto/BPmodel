@@ -51,7 +51,8 @@ wald_test(modelh1)
 
 \item{mu, sigma}{the (positive) location and precision parameter.}
 
-\item{log}{logical; The logarithm of the density is returned if the value is TRUE.}
+\item{log}{logical; The logarithm of the density is returned if the value is
+TRUE.}
 }
 \value{
 A list with class "htest" containing the following components:
@@ -62,12 +63,14 @@ A list with class "htest" containing the following components:
 
 \code{p.value}	the p-value for the test.
 
-\code{method}	a character string indicating what type of likelihood ratio test was performed.
+\code{method}	a character string indicating what type of likelihood
+ratio test was performed.
 
 \code{data.name} a character string giving the name(s) of the data
 }
 \description{
-Tests the null hypothesis of precision fixed in RBS models against the alternative of precision variable.
+Tests the null hypothesis of precision fixed in RBS models
+against the alternative of precision variable.
 }
 \author{
 Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}

@@ -2,33 +2,45 @@ Type: Package
 Package: BPmodel
 Title: Beta-Prime Regression Model
 Version: 1.1.1
-Date: 2020-11-14
-Author: Manoel Santos-Neto [aut, cre], Marcelo Bourguignon [aut], Mário de Castro [aut], Tales Ribeiro-Bezerra  [cre]
-Authors@R: c(
-    person("Manoel", "Santos-Neto", email = "manoel.ferreira@professor.ufcg.edu.br", role = c("aut","cre")),
-    person("Marcelo", "Bourguignon", email = "m.p.bourguignon@gmail.com", role = "aut"),
-    person("Mário", "de Castro", email = "mcastro@icmc.usp.br", role = "aut"),
-    person("Tales", "Ribeiro-Bezerra", email = "talesoriebir@gmail.com", role = "aut"))
-Description: Beta-Prime regression for modeling beta-prime-distributed dependent variables. 
-Maintainer: Tales Ribeiro-Bezerra <talesoriebir@gmail.com>
-Depends: 
-    R (>= 3.1.2), 
-    stats,
-    graphics,
-    pracma,
-    dplyr,
-    Deriv
-Imports: 
-    gamlss,
-    base,
-    ggplot2,
-    extraDistr,
-    gamlss.dist
+Authors@R: 
+    c(person(given = "Manoel",
+             family = "Santos-Neto",
+             role = c("aut", "cre"),
+             email = "manoel.ferreira@professor.ufcg.edu.br"),
+      person(given = "Marcelo",
+             family = "Bourguignon",
+             role = "aut",
+             email = "m.p.bourguignon@gmail.com"),
+      person(given = "Mário",
+             family = "de Castro",
+             role = "aut",
+             email = "mcastro@icmc.usp.br"),
+      person(given = "Tales",
+             family = "Ribeiro-Bezerra",
+             role = "aut",
+             email = "talesoriebir@gmail.com"))
+Author: Manoel Santos-Neto [aut, cre], Marcelo Bourguignon [aut], Mário de
+    Castro [aut], Tales Ribeiro-Bezerra [aut]
+Maintainer: Manoel Santos-Neto <manoel.ferreira@professor.ufcg.edu.br>
+Description: Beta-Prime regression for modeling beta-prime-distributed
+    dependent variables.
 License: GPL-3
 URL: https://github.com/santosneto/BPmodel
 BugReports: https://github.com/santosneto/BPmodel/issues
+Depends: 
+    Deriv,
+    dplyr,
+    graphics,
+    pracma,
+    R (>= 3.1.2),
+    stats
+Imports: 
+    base,
+    extraDistr,
+    gamlss,
+    gamlss.dist,
+    ggplot2
+Suggests: 
+    testthat
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.1.1
-Suggests: testthat
-
+RoxygenNote: 7.1.2
