@@ -34,7 +34,7 @@
 #' @return \code{data.name} a character string giving the name(s) of the data
 #'
 #' @author
-#' Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}
+#' Manoel Santos-Neto \email{manoel.ferreira at professor.ufcg.edu.br}
 #'
 #'
 #' @importFrom stats pchisq
@@ -59,7 +59,7 @@ grad_test_bp <- function(modelh0, modelh1) {
     }
 
     U <- matrix(NA, nrow = length(vt), 2)
-    for (i in 1:length(vt))
+    for (i in seq_len(vt))
     {
       U[i, ] <- pracma::grad(LL, x0 = cbind(muH0, deltaH0)[i, ], y = vt[i])
     }
@@ -113,7 +113,7 @@ grad_test_ga <- function(modelh0, modelh1) {
     }
 
     U <- matrix(NA, nrow = length(vt), 2)
-    for (i in 1:length(vt))
+    for (i in seq_len(vt))
     {
       U[i, ] <- pracma::grad(LL, x0 = cbind(muH0, deltaH0)[i, ], y = vt[i])
     }
@@ -169,7 +169,7 @@ grad_test_ig <- function(modelh0, modelh1) {
 
 
     U <- matrix(NA, nrow = length(vt), 2)
-    for (i in 1:length(vt))
+    for (i in seq_len(vt))
     {
       U[i, ] <- pracma::grad(LL, x0 = cbind(muH0, deltaH0)[i, ], y = vt[i])
     }
@@ -188,7 +188,7 @@ grad_test_ig <- function(modelh0, modelh1) {
   G <- t(Ua) %*% alphah1
   q <- modelh1$sigma.df
   gl <- q - 1
-  PVAL <- stats::pchisq(G, q - 1, lower.tail = F)
+  PVAL <- stats::pchisq(G, q - 1, lower.tail = FALSE)
   names(gl) <- "df"
   names(G) <- "G"
   RVAL <- list(
@@ -223,7 +223,7 @@ grad_test_wei <- function(modelh0, modelh1) {
     }
 
     U <- matrix(NA, nrow = length(vt), 2)
-    for (i in 1:length(vt))
+    for (i in seq_len(vt))
     {
       U[i, ] <- pracma::grad(LL, x0 = cbind(muH0, deltaH0)[i, ], y = vt[i])
     }
@@ -241,7 +241,7 @@ grad_test_wei <- function(modelh0, modelh1) {
   G <- t(Ua) %*% alphah1
   q <- modelh1$sigma.df
   gl <- q - 1
-  PVAL <- stats::pchisq(G, q - 1, lower.tail = F)
+  PVAL <- stats::pchisq(G, q - 1, lower.tail = FALSE)
   names(gl) <- "df"
   names(G) <- "G"
   RVAL <- list(
@@ -255,8 +255,8 @@ grad_test_wei <- function(modelh0, modelh1) {
 #' @rdname test
 #' @param x vector of quantiles.
 #' @param mu,sigma the (positive) location and precision parameter.
-#' @param log logical; The logarithm of the density is returned if the value is
-#' TRUE.
+#' @param log logical; The logarithm of the density is returned if
+#' the value is TRUE.
 #'
 #' @importFrom stats pchisq
 #' @export
@@ -268,7 +268,10 @@ dRBS <- function(x,
   if (any(mu < 0)) stop(paste("mu must be positive", "\n", ""))
   if (any(sigma < 0)) stop(paste("sigma must be positive", "\n", ""))
   if (any(x <= 0)) stop(paste("x must be positive", "\n", ""))
-  log.lik <- 0.5 * (sigma - log(mu) + log(sigma + 1) - log(16 * pi)) - (3 / 2) * log(x) - ((sigma + 1) / (4 * mu)) * x - ((mu * sigma * sigma) / (4 * (sigma + 1))) * (1 / x) + log(x + ((mu * sigma) / (sigma + 1)))
+  log.lik <- 0.5 * (sigma - log(mu) + log(sigma + 1) - log(16 * pi)) -
+    (3 / 2) * log(x) - ((sigma + 1) / (4 * mu)) * x -
+    ((mu * sigma * sigma) / (4 * (sigma + 1))) * (1 / x) +
+    log(x + ((mu * sigma) / (sigma + 1)))
   if (log == FALSE) fy <- exp(log.lik) else fy <- log.lik
   fy
 }
@@ -293,7 +296,7 @@ grad_test_rbs <- function(modelh0, modelh1) {
 
 
     U <- matrix(NA, nrow = length(vt), 2)
-    for (i in 1:length(vt))
+    for (i in seq_len(vt))
     {
       U[i, ] <- pracma::grad(LL, x0 = cbind(muH0, deltaH0)[i, ], y = vt[i])
     }
@@ -311,7 +314,7 @@ grad_test_rbs <- function(modelh0, modelh1) {
   G <- t(Ua) %*% alphah1
   q <- modelh1$sigma.df
   gl <- q - 1
-  PVAL <- stats::pchisq(G, q - 1, lower.tail = F)
+  PVAL <- stats::pchisq(G, q - 1, lower.tail = FALSE)
   names(gl) <- "df"
   names(G) <- "G"
   RVAL <- list(
@@ -348,7 +351,7 @@ score_test_bp <- function(modelh0, modelh1) {
 
 
     U <- matrix(NA, nrow = length(vt), 2)
-    for (i in 1:length(vt))
+    for (i in seq_len(vt))
     {
       U[i, ] <- pracma::grad(LL, x0 = cbind(muH0, deltaH0)[i, ], y = vt[i])
     }
@@ -439,7 +442,7 @@ score_test_bp <- function(modelh0, modelh1) {
   SC <- t(Ua.) %*% varalpha %*% Ua.
   q <- modelh1$sigma.df
   gl <- q - 1
-  PVAL <- pchisq(SC, q - 1, lower.tail = F)
+  PVAL <- pchisq(SC, q - 1, lower.tail = FALSE)
   names(gl) <- "df"
   names(SC) <- "SC"
   RVAL <- list(
@@ -474,7 +477,7 @@ score_test_rbs <- function(modelh0, modelh1) {
 
 
     U <- matrix(NA, nrow = length(vt), 2)
-    for (i in 1:length(vt))
+    for (i in seq_len(vt))
     {
       U[i, ] <- pracma::grad(LL, x0 = cbind(muH0, deltaH0)[i, ], y = vt[i])
     }
@@ -523,7 +526,11 @@ score_test_rbs <- function(modelh0, modelh1) {
     bi <- phi_mu.eta(tauH0)
 
     ll <- function(y, mu, sigma) {
-      fy <- 0.5 * sigma - 0.5 * log((sigma + 1)) - 0.5 * log(mu) - 1.5 * log(y) + log((sigma * y) + y + (sigma * mu)) - (y * (sigma + 1)) / (4 * mu) - (sigma * sigma * mu) / (4 * y * (sigma + 1)) - 0.5 * log(16 * pi)
+      fy <- 0.5 * sigma - 0.5 * log((sigma + 1)) - 0.5 * log(mu) -
+        1.5 * log(y) + log((sigma * y) + y + (sigma * mu)) -
+        (y * (sigma + 1)) / (4 * mu) -
+        (sigma * sigma * mu) / (4 * y * (sigma + 1)) -
+        0.5 * log(16 * pi)
 
       fy
     }
@@ -562,7 +569,7 @@ score_test_rbs <- function(modelh0, modelh1) {
   SC <- t(Ua.) %*% varalpha %*% Ua.
   q <- modelh1$sigma.df
   gl <- q - 1
-  PVAL <- pchisq(SC, q - 1, lower.tail = F)
+  PVAL <- pchisq(SC, q - 1, lower.tail = FALSE)
   names(gl) <- "df"
   names(SC) <- "SC"
   RVAL <- list(
@@ -600,7 +607,7 @@ score_test_ga <- function(modelh0, modelh1) {
 
 
     U <- matrix(NA, nrow = length(vt), 2)
-    for (i in 1:length(vt))
+    for (i in seq_len(vt))
     {
       U[i, ] <- pracma::grad(LL, x0 = cbind(muH0, deltaH0)[i, ], y = vt[i])
     }
@@ -649,7 +656,8 @@ score_test_ga <- function(modelh0, modelh1) {
     bi <- phi_mu.eta(tauH0)
 
     ll <- function(y, mu, sigma) {
-      fy <- (1 / sigma^2) * log(y / (mu * sigma^2)) - y / (mu * sigma^2) - log(y) - lgamma(1 / sigma^2)
+      fy <- (1 / sigma^2) * log(y / (mu * sigma^2)) -
+        y / (mu * sigma^2) - log(y) - lgamma(1 / sigma^2)
 
       fy
     }
@@ -688,7 +696,7 @@ score_test_ga <- function(modelh0, modelh1) {
   SC <- t(Ua.) %*% varalpha %*% Ua.
   q <- modelh1$sigma.df
   gl <- q - 1
-  PVAL <- pchisq(SC, q - 1, lower.tail = F)
+  PVAL <- pchisq(SC, q - 1, lower.tail = FALSE)
   names(gl) <- "df"
   names(SC) <- "SC"
   RVAL <- list(
@@ -723,7 +731,7 @@ score_test_ig <- function(modelh0, modelh1) {
 
 
     U <- matrix(NA, nrow = length(vt), 2)
-    for (i in 1:length(vt))
+    for (i in seq_len(vt))
     {
       U[i, ] <- pracma::grad(LL, x0 = cbind(muH0, deltaH0)[i, ], y = vt[i])
     }
@@ -772,7 +780,8 @@ score_test_ig <- function(modelh0, modelh1) {
     bi <- phi_mu.eta(tauH0)
 
     ll <- function(y, mu, sigma) {
-      fy <- (-0.5 * log(2 * pi) - log(sigma) - (3 / 2) * log(y) - ((y - mu)^2) / (2 * sigma^2 * (mu^2) * y))
+      fy <- (-0.5 * log(2 * pi) - log(sigma) - (3 / 2) * log(y) -
+               ((y - mu)^2) / (2 * sigma^2 * (mu^2) * y))
 
       fy
     }
@@ -811,7 +820,7 @@ score_test_ig <- function(modelh0, modelh1) {
   SC <- t(Ua.) %*% varalpha %*% Ua.
   q <- modelh1$sigma.df
   gl <- q - 1
-  PVAL <- pchisq(SC, q - 1, lower.tail = F)
+  PVAL <- pchisq(SC, q - 1, lower.tail = FALSE)
   names(gl) <- "df"
   names(SC) <- "SC"
   RVAL <- list(
@@ -847,7 +856,7 @@ score_test_wei <- function(modelh0, modelh1) {
 
 
     U <- matrix(NA, nrow = length(vt), 2)
-    for (i in 1:length(vt))
+    for (i in seq_len(vt))
     {
       U[i, ] <- pracma::grad(LL, x0 = cbind(muH0, deltaH0)[i, ], y = vt[i])
     }
@@ -897,7 +906,8 @@ score_test_wei <- function(modelh0, modelh1) {
 
     ll <- function(y, mu, sigma) {
       mu2 <- mu / gamma((1 / sigma) + 1)
-      fy <- log(sigma) + (sigma - 1) * log(y) - sigma * log(mu2) - (y / mu2)^sigma
+      fy <- log(sigma) + (sigma - 1) * log(y) -
+        sigma * log(mu2) - (y / mu2)^sigma
 
       fy
     }
@@ -936,7 +946,7 @@ score_test_wei <- function(modelh0, modelh1) {
   SC <- t(Ua.) %*% varalpha %*% Ua.
   q <- modelh1$sigma.df
   gl <- q - 1
-  PVAL <- pchisq(SC, q - 1, lower.tail = F)
+  PVAL <- pchisq(SC, q - 1, lower.tail = FALSE)
   names(gl) <- "df"
   names(SC) <- "SC"
   RVAL <- list(
@@ -963,7 +973,7 @@ wald_test <- function(modelh1) {
   W <- t(alphah1) %*% solve(varalpha) %*% alphah1
   q <- modelh1$sigma.df
   gl <- q - 1
-  PVAL <- pchisq(W, q - 1, lower.tail = F)
+  PVAL <- pchisq(W, q - 1, lower.tail = FALSE)
   names(gl) <- "df"
   names(W) <- "W"
   RVAL <- list(
