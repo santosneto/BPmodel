@@ -1,7 +1,7 @@
 Type: Package
 Package: BPmodel
 Title: Beta-Prime Regression Model
-Version: 1.1.4
+Version: 2.0
 Authors@R: 
     c(person(given = "Manoel",
              family = "Santos-Neto",
@@ -20,7 +20,8 @@ Authors@R:
              role = "aut",
              email = "talesoriebir@gmail.com"))
 Author: Manoel Santos-Neto [aut, cre], Marcelo Bourguignon [aut], Mário de
-    Castro [aut], Tales Ribeiro-Bezerra [aut]
+    Castro [aut], Tales Ribeiro-Bezerra [aut], Tarciana L. Pereira [clb], 
+    Tatiene C.E. Souza [clb], Kleber H. [clb] 
 Maintainer: Manoel Santos-Neto <manoel.ferreira@professor.ufcg.edu.br>
 Description: A new regression model for positive random variables with
     skewed and long tail.
